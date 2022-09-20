@@ -43,7 +43,22 @@ def CompareDate_IsFirstBigger(xDate,yDate):
     y2 =   datetime.strptime(xDate, '%d%m%y')  # datetime object    
     
     return(x2>y2) # Boolean if x>ys
+
     
+"""
+This function makes a zero matrix.
+Parameters:
+n_rows: number of rows
+n_columns: number of columns  
+output: matrix of zeros
+"""
+def make_zeros(n_rows: int, n_columns: int):
+    # define empty matrix
+    matrix = []
+    for i in range(n_rows):
+        matrix.append([0.0] * n_columns)
+    return matrix
+
 
 " Functions used in preprocessing the data"
 
@@ -54,7 +69,7 @@ def CompareCabinClass(first,second):
     dictMapping = {'F':2,'B':1,'E':0} # ordering is now mapped to numbers
     return (dictMapping[first] > dictMapping[second]) # Is first > second
 
-# From a list of cabin classes, return the highest class with the logiv F>B>E
+# From a list of cabin classes, return the highest class with the logic F>B>E
 def HighestCabinClass(cabinList):
     dictMapping = {'F':2,'B':1,'E':0} # ordering is now mapped to numbers
     highestNum = max( [dictMapping[j]] for j in cabinList ) # returns [0]/[1]/[2]
@@ -68,6 +83,15 @@ def CompareFlightType(first,second):
     dictMapping =  {'I':2,'C':1,'D':0} # ordering is now mapped to numbers
     return (dictMapping(first) > dictMapping(second)) # Is first > second
         
+# From a list of flight type, return the highest flight type I>C>D
+def HighestFlightType(FlightTypeList):
+    dictMapping = {'I':2,'C':1,'D':0} # ordering is now mapped to numbers
+    highestNum = max( [dictMapping[j]] for j in FlightTypeList ) # returns [0]/[1]/[2]
+    highestFltType = FindFirstKeyGivenValue(dictMapping,highestNum[0]) # invert to I/C/D
+    
+    return(highestFltType) # outputs I/C/D, don't care about the index
+
+
 " Cost parameters are defined in these functions"
 # take from config.csv, easier to hard code
 def DelDownCanCosts(configData):
@@ -253,6 +277,8 @@ def ConvertItinToDict(fileName,flightData):
     out['ItinStartTime'] = {} # start time of the whole itin at source airport
     out['ItinStartDate'] = {} # start date of the whole itin at source airport
     out['SinkAirport'] = {} # Sink airport for whole itin
+    out['ItinRefCabinClass'] = {} # reference cabin class of pax in this itin
+    out['ItinRefFlightType'] = {} # reference flight type for pax in this itin
     out['ItinEndTime'] = {} # Whole itin end time at sink airport
     out['ItinEndDate'] = {} # Whole itin end date at sink airport
     # Delays are calculated wrt this quantity
@@ -294,12 +320,28 @@ def ConvertItinToDict(fileName,flightData):
                 out['PaxCount'][itinCount] = int(l_split[3])
                 out['NumOfLegs'][itinCount] = int((siz-5)/3)
                 
+                # store cabin class of all legs
+                allLegCabinClass = []
+                # store flight type (D/C/I) for all legs
+                allLegFlightType = []
+                
                 # this stores all the leg details of the itinerary
                 for j2 in range(1, 1+ int((siz-5)/3)):
                     temp = 3*j2
                     out['LegFlightNum'].setdefault(itinCount,[]).append(l_split[temp+1])
                     out['LegFlyDate'].setdefault(itinCount,[]).append(l_split[temp+2])
                     out['LegCabinClass'].setdefault(itinCount,[]).append(l_split[temp+3])
+                    # update list of cabin classes used in this itin
+                    allLegCabinClass += l_split[temp+3]
+                    # The leg flight's row index in the flightData file
+                    currLegFlightIndex = FindFirstKeyGivenValue(flightData['Num'],l_split[temp+1])
+                    # update list of all flight types in this itin
+                    allLegFlightType += flightData['FlightType'][currLegFlightIndex ]
+                
+                # compute reference cabin class of this itin
+                out['ItinRefCabinClass'][itinCount] = HighestCabinClass(allLegCabinClass)
+                out['ItinRefFlightType'][itinCount] = HighestFlightType(allLegFlightType)
+                
                 itinCount += 1
     
     # Close file
@@ -543,7 +585,7 @@ def ObjDowngradingCost(someFlight,someCabinClass,someItin,recovFlightData,origIt
         
     else: # someFlight is only in recovered pax soln, not original itinerary
         # therefore we see if someFlight's cabin class is compared to reference cabin class of the itin (RHS)
-        origClass = HighestCabinClass(origItinData['LegCabinClass'][someItin])
+        origClass = origItinData['ItinRefCabinClass'][someItin]
         
     downCost = 0 # initialize, also it is zero when the if loop below is not entered
     if CompareCabinClass(origClass,someCabinClass):
@@ -593,42 +635,22 @@ def ObjDelayCost(someFlight,someCabinClass,someItin,recovFlightData,origItinData
         delayCost = allCostsDict['Delay'][fgtType][someCabinClass] *int(delayMinutes.total_seconds() / 60)  
         
     return delayCost
-        
     
+
 # Given original itinerary and recovered flight schedules and a flight to check,
-# this function computes the cancellation costs for a variable y_fmk in the MIP
+# this function computes the cancellation costs for a variable y_fmk  (but really for y_k in the MIP
 # Be very careful to feed recov flight data and not orig flight data
-def ObjDelayCost(someFlight,someCabinClass,someItin,recovFlightData,origItinData,
-                       flightTypeData,allCostsDict):
+def ObjCancCost(someItin,recovFlightData,origItinData,flightTypeData,allCostsDict):
     
-    # row index of the flight someFlight in the flight data file
-    rowIndexInFlightData = FindFirstKeyGivenValue(recovFlightData['Num'],someFlight)
+    # in bound or outbound itinerary
+    InorOutitin = origItinData['InOrOut'][someItin]
     
-    # when does someFlight arrive
-    someFlightArrivalTime = recovFlightData['ArrTime'][rowIndexInFlightData]
-    someFlightArrivalDate = recovFlightData['FlyingDate'][rowIndexInFlightData]
+    #reference flight type
+    RefType = origItinData['ItinRefFlightType'][someItin]
     
-    # original itinerary's arrival time and date
-    origItinEndTime = origItinData['ItinEndTime'][someItin]
-    origItinEndDate = origItinData['ItinEndDate'][someItin]
+    # ref cabin class
+    origClass = origItinData['ItinRefCabinClass'][someItin]
     
-    t1 = ConvertFlightTime(someFlightArrivalTime,someFlightArrivalDate) # Datetime format
-    t2 = ConvertFlightTime(origItinEndTime,origItinEndDate) #Datetime format
-    
-    delayCost = 0 # initialize, also it is zero when the if loop below is not entered
-    
-    if t1 > t2:
+    CancCost = allCostsDict['Cancel'][InorOutitin][RefType][origClass]
         
-        # how many minutes of delay in itinerary k, if we pick someFlight in recovered itinerary for k
-        delayMinutes = t1 - t2
-        
-        #Use flight type data, the key is origin and destination of someFlight
-        # it is an ordered pair key in flightTypeData, key value gives us D/C/I
-        fgtType = flightTypeData[(recovFlightData['Orig'][rowIndexInFlightData],recovFlightData['Dest'][rowIndexInFlightData])]
-        
-        # delay cost is linear in number of delay minutes
-        delayCost = allCostsDict['Delay'][fgtType][someCabinClass] *int(delayMinutes.total_seconds() / 60)  
-        
-    return delayCost
-        
-    
+    return CancCost[0]

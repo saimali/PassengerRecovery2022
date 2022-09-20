@@ -1,4 +1,10 @@
-"Main formulation here"
+"""
+This python code implements the MIP, as well as graph based approach. use this in same folder as functionsPax
+"""
+
+# First run functionsPax.py to load the functions
+# run functionsPax
+
 #%%
 import pandas as pd
 import csv
@@ -6,11 +12,20 @@ from datetime import datetime, date,time, timedelta
 from timeit import default_timer as timer
 import networkx as nx
 import cplex
+import gurobipy as gp
+from gurobipy import *
+from gurobipy import GRB
+import os
+import math
+from matplotlib import pyplot as plt
+from collections import Counter
+import itertools
+import numpy as np
 
-
+#%%
 #########################################################################
 "DATA PREPROCESSING"
-#%%
+
 # Note: Write the column names in all the csv files manually
 #Aircraft.csv
 # Use this to get seat capacity of aircrafts given model number
@@ -122,6 +137,9 @@ MaxLegNumIncrease = 2 # Bound how many legs the recovered pax itinerary has more
 # each key value is a DAG for the itinerary, created using source/sink knowledge
 # and the flights recovered ops solution
 #%%
+"""
+Implement preprocessing- Create the graphs Gk
+"""
 
 allAirportDAGs = {} # e.g. {1: [{'CDG':['JFK','BOS'], 'JFK':['LHR','SFO']}] , 2: ...}
 # for key 1 (itinerary 1), keyvalue is a dict itself. In this nested dict, 
@@ -150,10 +168,15 @@ tim2 =  timer() - timInit
 
 
 #%%
+"""
+MIP implementation
+"""
+timeLim = 1e4
+# Create a new Gurobi MIP model
+mod = gp.Model("mip1")
 
-"cplex code"
-
-myProblem = cplex.Cplex() # cplex problem object
+# set time limit
+mod.setParam(GRB.Param.TimeLimit, timeLim)
 
 # Number of flow conservation constraints
 numflowConstraints = 0
@@ -161,17 +184,30 @@ for k in range(0,totalItin):
     # number of nodes in the DAG, subtract 1 to remove the source airport
     numflowConstraints += len(allAirportDAGs[k].keys()) - 1
     
-    
+        
 # First how many variables do we have?
 cabinTypes = ['F','B','E'] # types of cabin classes
 
+totalFlightNum = len(data_flights['Num'])
+
 # how many y_{fmk}, number of (integer) variables in MIP
 # Apr 25th 2022- 3,02,6016 (whew!)
-sizVarMIP = totalItin * len(cabinTypes) * len(data_flights['Num'])
+sizVarMIP = totalItin * len(cabinTypes) * totalFlightNum
+
 
 numVar = 0 # number of variables in our problem
+
+# this dict stores y_{fmk}. The keys are [f,m,k], values are Gurobi variable type Integer
+yVar = {}
+# dicts for storing corresponding downgrading, delay and cancellation costs, leys are [f,m,k]
+cDown = {}
+cDelay = {}
+cCancel = {}
+
+
 for m in cabinTypes: # for each cabin class (pax recovery solution)
     for k in range(0,totalItin): # for each itinerary
+
         ArcSetOfItin = allFlightDAGs[k] # The DAG of our itinerary
         # Number of (unique) vertex pairs with arcs between them in the DAG, not counting multiple arcs between two nodes
         NumArcsInItin = len(ArcSetOfItin.keys()) 
@@ -180,13 +216,15 @@ for m in cabinTypes: # for each cabin class (pax recovery solution)
         itinSink = data_itin['SinkAirport'][k]
         
         
+        cCancel[k] = ObjCancCost(k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
+        
+        
         for arc in ArcSetOfItin.keys(): # for each arc i -> j
             flightsInThisArc = ArcSetOfItin[arc]
             
             # # For each flight between the given arc, use flight ID '343' to get row number in flightdata
             # flightRowNumbers = [FindFirstKeyGivenValue(data_recovflights['Num'],v) for v in flightsInThisArc]
             
-            upperBounds = []
             # wee only want to use flights with non zero remaining capacity to form the network
             flightsWithNonZeroCap = []
             # for each flight
@@ -194,67 +232,47 @@ for m in cabinTypes: # for each cabin class (pax recovery solution)
                 
                 # row number in recovered flight data for flight f
                 row = FindFirstKeyGivenValue(data_recovflights['Num'],f)
+                # capacity of the flight f
                 upb = data_recovflights['RemCabinCapacityGivenItin'][row][m]
-                if upb == -1: # ground transport have -1 as capacity, we set upper bound to infinity here
-                    upperBounds.extend([cplex.infinity])
-                    # this flight has some capacity
-                    flightsWithNonZeroCap += [f]
-                # only bother defining y variables if there is remaining capacity left at all
-                if upb > 0:
-                    # add to the set of upper bounds
-                    upperBounds.extend([upb])
-                    # this flight has non-zero capacity
-                    flightsWithNonZeroCap += [f]
-
-            # set variable names, e.g. y-Flt4498-ArcBIQ->CDG-CabinE-Itin0
-            NamesforVars = ["y"+"-"+"Flt"+str(f)+"-"+"Arc"+arc[0]+"->"+arc[1]+"-"+"Cabin"+m+"-"+"Itin"+str(k) 
-                    for f in flightsWithNonZeroCap]
-
-            """
-            Obj coefficients
-            """
-            # downgrading costs as a list for every flight in flightsInThisArc
-            # m is the cabin class being proposed by pax recovery
-            downCosts = [ObjDowngradingCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
-                for f in flightsWithNonZeroCap]
-    
-            # Similarly write out delay costs and cancellation costs?
+                
+                if (upb == -1) or (upb>0):
+                    if upb == -1: # ground transport have -1 as capacity, we set upper bound to infinity here
+                        # this flight has some capacity
+                        flightsWithNonZeroCap += [f]
+                    
+                        # set variable names, e.g. y-Flt4498-ArcBIQ->CDG-CabinE-Itin0
+                        yVar[f,m,k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"Flt%s-Arc%s->%s-Cabin-%s-Itin-%d" % (f,arc[0],arc[1],m,k))
             
+                    # only bother defining y variables if there is remaining capacity left at all
+                    if upb > 0:
+                        # this flight has non-zero capacity
+                        flightsWithNonZeroCap += [f]
             
-            
-            # Sanity check to make sure variables and upper bounds have same size
-            if len(NamesforVars)!= len(upperBounds):
-                print(m,k,arc,len(NamesforVars),len(upperBounds))
-    
-            numVar += len(upperBounds)
-            
-            # myProblem.variables.add(names=NamesforVars,lb=[0]*len(ArcSetOfItin[arc]),
-            #                 ub= upperBounds)
-            
-            myProblem.variables.add(names=NamesforVars,lb=[0]*len(upperBounds),
-                            ub= upperBounds)
-#Variables have been assigned here
-# We get numVar = 286149 for 1600 itineraries,600 flights,34026 pax,35 airports, 3 cabin classes
-
+                        # set variable names, e.g. y-Flt4498-ArcBIQ->CDG-CabinE-Itin0
+                        yVar[f,m,k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"Flt%s-Arc%s->%s-Cabin-%s-Itin-%d" % (f,arc[0],arc[1],m,k))
+                    
+                    # downgrading costs 
+                    cDown[f,m,k] = ObjDowngradingCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
+                    
+                    # delay costs
+                    # only if flight has destination as sink of itinerary
+                    if (arc[1] == itinSink): 
+                        
+                        # compute delay costs
+                        cDelay[f,m,k] = ObjDelayCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
+                        
+                    else:
+                        # if flight does not have sink as destination
+                        cDelay[f,m,k] = 0
+                    
+                
 # Apr 25 2022: we prune to only use flights with non zero remaining capacity: numVar = 168006 for
 # 1659 itineraries, 608 flights, 35 airports, 3 cabin classes
 
-        # delay costs of itinerary k, flight f and cabin class m
-        # we only need to consider flights where the destination is the sink
-            # arc[1] is the destination of the (directed) edge 
-            if arc[1] == itinSink:
-                
-                delayCosts = [ObjDelayCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
-                for f in flightsWithNonZeroCap]
-
-
-## Subroutine CPLEX
 
 
 #%%
-"Alg4"
-
-# copy from other file
+"Algorithm"
 
 
 
