@@ -205,32 +205,54 @@ cDown = {}
 cDelay = {}
 cCancel = {}
 
+# initialize the three terms in the objective function
+objDelayTerm = 0
+objDownGradingTerm = 0
+objCancelTerm = 0
 
-for m in cabinTypes: # for each cabin class (pax recovery solution)
-    for k in range(0,totalItin): # for each itinerary
+for k in range(0,totalItin): # for each itinerary 
 
-        ArcSetOfItin = allFlightDAGs[k] # The DAG of our itinerary
-        # Number of (unique) vertex pairs with arcs between them in the DAG, not counting multiple arcs between two nodes
-        NumArcsInItin = len(ArcSetOfItin.keys()) 
+    yVar[k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"DummyFlt-Itin-%d" % (k))
+    
+    ArcSetOfItin = allFlightDAGs[k] # The DAG of our itinerary
+    # Number of (unique) vertex pairs with arcs between them in the DAG, not counting multiple arcs between two nodes
+    NumArcsInItin = len(ArcSetOfItin.keys()) 
+    
+    # sink airport of this itinerary k
+    itinSink = data_itin['SinkAirport'][k]
+    
         
-        # sink airport of this itinerary k
-        itinSink = data_itin['SinkAirport'][k]
+    # only bother defining y variables if there is remaining capacity left at all
+    
+    # define cancellation cost for itinerary k
+    cCancel[k] = ObjCancCost(k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
+    
+    objCancelTerm += LinExpr(cCancel[k]*yVar[k])
+    
+    # dictionary of number of pax coming into node j, keys are each node, key values are number of pax sum_{i,m} y_{ijmk} for in node to j
+    inFlowPaxNumDict = dict.fromkeys(list(allAirportDAGs[k].keys()),0)
+    
+    # dictionary of number of pax going out of node i, keys are each node, key values are number of pax sum_{j,m} y_{ijmk} for every out node from i
+    outFlowPaxNumDict = dict.fromkeys(list(allAirportDAGs[k].keys()),0)
+
+    for arc in ArcSetOfItin.keys(): # for each arc i -> j
+        flightsInThisArc = ArcSetOfItin[arc]
         
+        # node i of arc
+        firstNode = arc[0]
+        # node j of arc
+        secondNode = arc[1]
         
-        cCancel[k] = ObjCancCost(k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
+        # # For each flight between the given arc, use flight ID '343' to get row number in flightdata
+        # flightRowNumbers = [FindFirstKeyGivenValue(data_recovflights['Num'],v) for v in flightsInThisArc]
         
-        
-        for arc in ArcSetOfItin.keys(): # for each arc i -> j
-            flightsInThisArc = ArcSetOfItin[arc]
-            
-            # # For each flight between the given arc, use flight ID '343' to get row number in flightdata
-            # flightRowNumbers = [FindFirstKeyGivenValue(data_recovflights['Num'],v) for v in flightsInThisArc]
-            
-            # wee only want to use flights with non zero remaining capacity to form the network
+        # for each flight
+        for f in flightsInThisArc:
+             # we only want to use flights with non zero remaining capacity to form the network
             flightsWithNonZeroCap = []
-            # for each flight
-            for f in flightsInThisArc:
-                
+            
+            for m in cabinTypes: # for each cabin class (pax recovery solution)
+                                
                 # row number in recovered flight data for flight f
                 row = FindFirstKeyGivenValue(data_recovflights['Num'],f)
                 # capacity of the flight f
@@ -242,7 +264,7 @@ for m in cabinTypes: # for each cabin class (pax recovery solution)
                         flightsWithNonZeroCap += [f]
                     
                         # set variable names, e.g. y-Flt4498-ArcBIQ->CDG-CabinE-Itin0
-                        yVar[f,m,k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"Flt%s-Arc%s->%s-Cabin-%s-Itin-%d" % (f,arc[0],arc[1],m,k))
+                        yVar[f,m,k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"Flt%s-Arc%s->%s-Cabin-%s-Itin-%d" % (f,firstNode,secondNode,m,k))
             
                     # only bother defining y variables if there is remaining capacity left at all
                     if upb > 0:
@@ -250,31 +272,71 @@ for m in cabinTypes: # for each cabin class (pax recovery solution)
                         flightsWithNonZeroCap += [f]
             
                         # set variable names, e.g. y-Flt4498-ArcBIQ->CDG-CabinE-Itin0
-                        yVar[f,m,k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"Flt%s-Arc%s->%s-Cabin-%s-Itin-%d" % (f,arc[0],arc[1],m,k))
+                        yVar[f,m,k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = upb ,name="y"+"Flt%s-Arc%s->%s-Cabin-%s-Itin-%d" % (f,firstNode,secondNode,m,k))
+                    
+                    # cDown[f,m,k] = ObjDowngradingCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
                     
                     # downgrading costs 
-                    cDown[f,m,k] = ObjDowngradingCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
+                    if (ObjDowngradingCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts) > 0):
+                        
+                        cDown[f,m,k] = ObjDowngradingCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
+                        
+                        objDownGradingTerm += LinExpr(cDown[f,m,k],yVar[f,m,k])
                     
                     # delay costs
                     # only if flight has destination as sink of itinerary
-                    if (arc[1] == itinSink): 
+                    if (secondNode == itinSink): 
                         
                         # compute delay costs
                         cDelay[f,m,k] = ObjDelayCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
                         
-                    else:
-                        # if flight does not have sink as destination
-                        cDelay[f,m,k] = 0
+                        objDelayTerm += LinExpr(cDelay[f,m,k],yVar[f,m,k])
+                        
+                    # Constraints
+                    # add number of pax flowing into and out of nodes for flow constraint
+                    
+                    else: # add flow contraint term if secondNode is not sink
+                        outFlowPaxNumDict[secondNode] += quicksum(yVar[f,m,k] for f in flightsWithNonZeroCap)
+        
+                    inFlowPaxNumDict[firstNode] += quicksum(yVar[f,m,k] for f in flightsWithNonZeroCap)
+                    
+                        
+# define the total obj term
+totalObjTerm = objDelayTerm + objDownGradingTerm + objCancelTerm
+
+mod.setObjective(totalObjTerm, GRB.MINIMIZE)
                     
                 
 # Apr 25 2022: we prune to only use flights with non zero remaining capacity: numVar = 168006 for
 # 1659 itineraries, 608 flights, 35 airports, 3 cabin classes
 
+# size(cCancel) = 1659
+# size(CDelay) = 32263
+# size(cDown) = 7382
+# not bad, easier to compute objective  
 
 
 #%%
-"Algorithm"
+
+m = 'E'
+k = 0
+
+arc = ('BIQ', 'CDG')
+
+f = '4498'
+f =  '4502'
+
+arc =  ('BIQ', 'ORY')
+
+f = '4344'
+f = '4348'
+f =  '4352'
+f = '4354'
+f ='4358'
+
+arc = ('CDG', 'ORY')
 
 
+someFlight,someCabinClass,someItin,recovFlightData,origItinData,flightTypeData,allCostsDict = f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts
 
             

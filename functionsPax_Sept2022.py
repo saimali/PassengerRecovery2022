@@ -596,7 +596,7 @@ def ObjDowngradingCost(someFlight,someCabinClass,someItin,recovFlightData,origIt
         # it is an ordered pair key in flightTypeData, key value gives us D/C/I
         fgtType = flightTypeData[(recovFlightData['Orig'][rowIndexInFlightData],recovFlightData['Dest'][rowIndexInFlightData])]
         
-        downCost = allCostsDict['Down'][fgtType][(origClass,someCabinClass)]
+        downCost = allCostsDict['Down'][fgtType][(origClass,someCabinClass)][0]
         
     return downCost
         
@@ -632,7 +632,7 @@ def ObjDelayCost(someFlight,someCabinClass,someItin,recovFlightData,origItinData
         fgtType = flightTypeData[(recovFlightData['Orig'][rowIndexInFlightData],recovFlightData['Dest'][rowIndexInFlightData])]
         
         # delay cost is linear in number of delay minutes
-        delayCost = allCostsDict['Delay'][fgtType][someCabinClass] *int(delayMinutes.total_seconds() / 60)  
+        delayCost = allCostsDict['Delay'][fgtType][someCabinClass][0] *int(delayMinutes.total_seconds() / 60)  
         
     return delayCost
     
@@ -652,5 +652,7 @@ def ObjCancCost(someItin,recovFlightData,origItinData,flightTypeData,allCostsDic
     origClass = origItinData['ItinRefCabinClass'][someItin]
     
     CancCost = allCostsDict['Cancel'][InorOutitin][RefType][origClass]
+    
+    CancCost = CancCost[0] + origItinData['UnitCost'][someItin]
         
-    return CancCost[0]
+    return CancCost
