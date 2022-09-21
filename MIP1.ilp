@@ -1,0 +1,11 @@
+\ Model mip1_copy
+\ LP format - for model browsing. Use MPS format to capture full model detail.
+Minimize
+ 
+Subject To
+ c2: yFlt4358-ArcBIQ->ORY-Cabin-E-Itin-596 = 88
+Bounds
+ -infinity <= yFlt4358-ArcBIQ->ORY-Cabin-E-Itin-596 <= 50
+Generals
+ yFlt4358-ArcBIQ->ORY-Cabin-E-Itin-596
+End
