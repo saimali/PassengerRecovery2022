@@ -22,7 +22,7 @@ def randomDelay(dummy):
     twoDelayOptions = [posDelaynumber,noDelay]
     
     # return no delay wp 0.4, some pos delay wp 0.6
-    return random.choices(twoDelayOptions,[0.6,0.4])[0]
+    return random.choices(twoDelayOptions,[0.4,0.6])[0]
 
 def addTime(inputTime, delay):
 
@@ -49,7 +49,7 @@ flightsDataFr = flightsDataFr[~bad_rows]
 
 flightsDataFr['Delay'] = flightsDataFr['Orig'].apply(randomDelay)
 
-flightsRecovered = flightsDataFr.sample(frac=0.5)
+flightsRecovered = flightsDataFr.sample(frac=0.8)
 flightsRecovered['DepTime'] = flightsRecovered.apply(lambda x: addTime(x['DepTime'], x['Delay']), axis=1)
 flightsRecovered['ArrTime'] = flightsRecovered.apply(lambda x: addTime(x['ArrTime'], x['Delay']), axis=1)
 

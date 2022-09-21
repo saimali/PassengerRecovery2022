@@ -140,48 +140,113 @@ def DelDownCanCosts(configData):
     
     # return a highly nested dictionary with all cost parameters
     return(dictAllCosts)       
-    
+
+
 " Remaining capacity of each flight when a given itin dataset is implemented"
 # if you pass data_flights, it should output full capacities
 # if you pass data_recovflights, it should output remaining capacities
-def CabinCapacity(someflightData,aircraftData,itinData):
+def CabinCapacity(somerecovFlightData,someFlightData,aircraftData,itinData):
     # Output will be modified flightData dictionary, with an extra key which tells us
     # about remaining capacities
     totalItin = len(itinData['Num'])
+
+    # list of recovered flights
+    listRecovFlights = list(somerecovFlightData['Num'].values())
+    # total number of recovered flights
+    totalrecovFlights = len(listRecovFlights)
+    # writes if a flight is disrupted or not, from orig flight data
+    somerecovFlightData['IsFLightDisrupted'] = dict.fromkeys(range(totalrecovFlights),False) 
+
+    
+    for fIndex in range(totalrecovFlights):
+        
+        flightNum = somerecovFlightData['Num'][fIndex]
+        
+        # check original dep time
+        """
+        To do: It's fine for now to check just times differing,
+        since delays are less than 24h, but this should really be a datetime comparison
+        """
+        indexFlightData = FindFirstKeyGivenValue(someFlightData['Num'],flightNum)
+        origDepTime = someFlightData['DepTime'][indexFlightData]
+        # check recov dep time of this flight
+        newDepTime = somerecovFlightData['DepTime'][fIndex]
+        
+        # if flight has been delayed
+        if newDepTime != origDepTime:
+            
+            # flight has been disrupted, make a note
+            somerecovFlightData['IsFLightDisrupted'][fIndex] = True
+    
     # triple nested dict
-    someflightData['RemCabinCapacityGivenItin'] = dict.fromkeys(someflightData['Num'].keys(),{})
-    for i in someflightData['Num'].keys():
+    somerecovFlightData['RemCabinCapacityGivenItin'] = dict.fromkeys(somerecovFlightData['Num'].keys(),{})
+    
+    for i in somerecovFlightData['Num'].keys():
         # e.g. A380#1
-        tail = someflightData['AircraftUsed'][i]
+        tail = somerecovFlightData['AircraftUsed'][i]
         cabCapacity = aircraftData[tail]
         # remaining capacity is initialized to aircraft capacity
-        someflightData['RemCabinCapacityGivenItin'][i] = cabCapacity
+        somerecovFlightData['RemCabinCapacityGivenItin'][i] = cabCapacity
         
+    # set of all disrupted itineraries to be computed
+    Kdis = []
     # For every itinerary
-    for j in range(0,totalItin):
-        # number of passengers
-        itin_pax = itinData['PaxCount'][j]
-        itin_numLegs = itinData['NumOfLegs'][j]
-
-    for j2 in range(0,itin_numLegs):
-        # e.g. Flight '343' flies this leg
-        legflightID = itinData['LegFlightNum'][j][j2]
-        # e.g. 'E' class
-        legflightClass = itinData['LegCabinClass'][j][j2]
-        
-        # the row number/index of Flight 343 in flightData
-        indexFlightData = FindFirstKeyGivenValue(someflightData['Num'],legflightID)
-        # for ground transportation, the capacity is infinity, but it is given as -1 in the dataset
-        if someflightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass] != -1:
-            # number of passengers assigned to this flight by the itinerary
-            allPaxAssigned = someflightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass] - itin_pax
-            # If it goes below zero, then it means itinData has allocated more passenfers to this flight than the
-            # remaining capacity, we simply output 0, though we should really also output that itinData should be
-            # changed, it is allocating more than it should
-            someflightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass] = max(0,allPaxAssigned)
+    for k in range(0,totalItin):
     
-    return(someflightData) # return a modified flightData (either original or recovered can be used in this
-    # function). Now the remaining capacities are updated using the itinerary.
+        # list of all flights in this itin
+        itin_Legs = itinData['LegFlightNum'][k]
+
+        # if every flight in this itin is in recovered flight solution
+        if set(itin_Legs).issubset(set(listRecovFlights)):
+            
+            # is any flight disrupted? make a list
+            isanyFlightDisrupted = [somerecovFlightData['IsFLightDisrupted'][FindFirstKeyGivenValue(somerecovFlightData['Num'],f)] for f in itin_Legs]
+            
+            # if any leg is disrupted, whole itinerary is disrupted
+            if (any(isanyFlightDisrupted)==True):
+                Kdis += [k]
+                
+            # else this itinerary remains the same, update remaining flight capacities
+            # no flight is disrupted
+            else:
+                # number of passengers
+                itin_pax = itinData['PaxCount'][k]
+                
+                # for every flight in this itin
+                for j2 in range(len(itin_Legs)):
+                    
+                    # e.g. Flight '343' flies this leg
+                    legflightID = itinData['LegFlightNum'][k][j2]
+                    # e.g. 'E' class
+                    legflightClass = itinData['LegCabinClass'][k][j2]
+                    
+                    indexFlightData = FindFirstKeyGivenValue(somerecovFlightData['Num'],legflightID)
+                    
+                    # cap of this flight for this cabin class
+                    whatiscurrRemCap = somerecovFlightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass]
+                    
+                    # update capacities for finite capacity flights
+                    if  whatiscurrRemCap >0:
+                        
+                        #how much capacity is reduced for this
+                        reductionCap = whatiscurrRemCap - itin_pax
+                        
+                        # sanity check, make sure reduction doesn't go below zero
+                        somerecovFlightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass] = max(0,reductionCap)
+                                                    
+                # # number of passengers assigned to this flight by the itinerary
+                # allPaxAssigned = somerecovFlightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass] - itin_pax
+                # # If it goes below zero, then it means itinData has allocated more passenfers to this flight than the
+                # # remaining capacity, we simply output 0, though we should really also output that itinData should be
+                # # changed, it is allocating more than it should
+                # somerecovFlightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass] = max(0,allPaxAssigned)
+            
+        else:
+            # itinerary k is disrupted cos there is a disrupted flight in its legs
+            Kdis += [k]
+            
+
+    return(somerecovFlightData,Kdis) # return a modified recovflightData and set of disrupted itineraries
         
 " given dist.csv, store which type among D/C/I a leg is, given source and sink "
 def FindFlightTypes(fileName):
@@ -225,7 +290,6 @@ def ConvertAircraftToDict(basicAircraftDict):
 " This function creates a subdictionary of previous and next flights for every flight"
 # Input is a dictionary made from a file like flights.csv
 # Note: yet to add prev flight based on the last column entries in flights.csv,
-# it's weird to see some turnaround times of 20 mins? e.g. row 120 in flights.csv
 def PrevNextFlightList(flightData,rotationData,flightTypeData,turnTime):
     
     flightData['PrevFlights']={}
@@ -494,9 +558,11 @@ def CreatingGraphGivenAnItinerary(itinData,itinIndex,flightData,allAirports,disr
     
     # cutoff argument can be used to restrict the length of paths
     # https://networkx.github.io/documentation/networkx-1.9/reference/generated/networkx.algorithms.simple_paths.all_simple_paths.html
-    
-    allpaths = nx.all_simple_paths(G,source=itin_SourceAirport,target=itin_SinkAirport,
-                                   cutoff = itin_NumOfLegs + MaxLegNumIncrease)
+    if any(flightDAG):
+        allpaths = nx.all_simple_paths(G,source=itin_SourceAirport,target=itin_SinkAirport,
+                                       cutoff = itin_NumOfLegs + MaxLegNumIncrease)
+    else:
+        allpaths = []
 
     # Only reachable nodes from source to sink
     reachableNodesOnly = set([itin_SourceAirport,itin_SinkAirport])                 

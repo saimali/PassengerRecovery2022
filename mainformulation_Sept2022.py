@@ -2,9 +2,6 @@
 This python code implements the MIP, as well as graph based approach. use this in same folder as functionsPax
 """
 
-# First run functionsPax.py to load the functions
-# run functionsPax
-
 #%%
 import pandas as pd
 import csv
@@ -22,8 +19,12 @@ from collections import Counter
 import itertools
 import numpy as np
 
-# so that you have the functions available here and not have to run that every time
+# First run functionsPax.py to load the functions
+# run functionsPax
 from functionsPax_Sept2022 import *
+
+# generate random recovery file
+from generateRandomRecovery import *
 
 #%%
 
@@ -49,9 +50,10 @@ data_config = pd.read_csv('config.csv').to_dict() #scenario parameters
 dictAllCosts = DelDownCanCosts(data_config)
 # returns a dict that looks like {'Down': dictDownCosts, 'Delay': dictDelCosts,
 # 'Cancel': {'A': dictCanCostsOutbound, 'R': dictCanCostsInbound}}
-
 # the outputs are all nested dictionaries. First level keys are itin type 
 # (Domestic/Cont/Intercont) and the nested keys denote the cabin class
+
+
 
 # rotations.csv
 # Ops solution gives aircraft rotations
@@ -88,7 +90,7 @@ recovByTime = datetime.combine(recovEndDate,recovEndTime)
 flightsDataFr = pd.read_csv('flights.csv',
                             names=['Num','Orig','Dest','DepTime','ArrTime','PrevFlightBySameAircraft'],
                             delim_whitespace=True)
-#Cleaning: CHeck if flights.csv has last row as #, special character,
+#Cleaning: Check if flights.csv has last row as #, special character,
 # then drop the last row, else this causes problems later.
 flightscsv = flightsDataFr[:-1].to_dict()
 
@@ -101,7 +103,7 @@ data_airports.extend(flightscsv['Orig'][keys] for keys in flightscsv['Orig'].key
 # turnaround time in mins to be passed as an argument
 data_flights = PrevNextFlightList(flightscsv,data_rotations,data_LegTypes,turnTime=30)
 # Now we have list of flights along with predecessor and successors, along with
-# their flyng dates (based on Ops solution) and aircraft used
+# their flying dates (based on Ops solution) and aircraft used
 # (from which seating capacity can be deduced)
 
 """
@@ -112,8 +114,8 @@ Recovered Flights
 # data_recovflights = data_flights # Change this manually
 
 
-## we only kept rows 0-574 of OG flight
-recovflightsDataFr = pd.read_csv('recovflights.csv',
+## we only kept some rows of OG flight set
+recovflightsDataFr = pd.read_csv('random_recovered_flights.csv',
                             names=['Num','Orig','Dest','DepTime','ArrTime','PrevFlightBySameAircraft'],
                             delim_whitespace=True)
 #Cleaning: CHeck if flights.csv has last row as #, special character,
@@ -133,27 +135,19 @@ data_recovflights = PrevNextFlightList(recovflightscsv,data_rotations,data_LegTy
 # (from which seating capacity can be deduced)
 
 
-
-"""
-needs to be done
-"""
-
 # Itineraries.csv
 # For Itin file, headers are Ident Type Price Count (Flight DepDate Cabin)+
 # Each row can have different number of columns, hence we do the conversion
 # into a dictionary in a separate function
 data_itin = ConvertItinToDict('itineraries.csv',data_flights) #Itinerary stored as Dict
 
-# Note: 700/1900 itineraries had same source and destination! So we need to
-# re think these, since we pruned them out. The intermediate airports in these itineraries
-# have to be definitely reached in a pax solution
-
 # Therefore data_itin will be the original pax itin. Our MIP will calculate
 # recovered pax itin.
 
-# Given an itinerary, this is data_flights with an extra key, which tells us how many
+# Given an itinerary, this is data_recovflights with an extra key, which tells us how many
 # remaining seats there are in each cabin class. Note that -1 means infinite capacity (ground transport)
-data_flights_withRemCapacity = CabinCapacity(data_recovflights,data_aircraft,data_itin)
+# also outputs set of disrupted itineraries
+data_recovflights,Kdis = CabinCapacity(data_recovflights,data_flights,data_aircraft,data_itin)
 
 # Feeding initial pax itin gives us zero remaining capacity, we need to check after disruption
 
@@ -190,14 +184,25 @@ timInit = timer()
 
 
 totalItin = len(data_itin['Num']) # Number of itineraries
-# Build the DAGs for every itinerary
-for k in range(0,totalItin):
-    if k%50 == 0: print('loop is in iteration',k)
+
+totalKDis = len(Kdis) # number of disrupted itineraries
+# Build the DAGs for every itinerary in disrupted set
+count = 0
+for k in Kdis:
+    if count%50 == 0: 
+        print('computing Gk for itinerary %d of %d disrupted itineraries' % (count,totalKDis))
+    count += 1
+    
     allAirportDAGs[k],allFlightDAGs[k],allPathsDAGs[k] = CreatingGraphGivenAnItinerary(data_itin,k,data_recovflights,data_airports,disrupStartTime,recovByTime,MaxLegNumIncrease)
+
+
+    if not any(allAirportDAGs[k]): 
+        # dummy flight source to sink, used for cancellation
+        allAirportDAGs[k][data_itin['SourceAirport'][k]] = [data_itin['SinkAirport'][k]]
+        allFlightDAGs[k][(data_itin['SourceAirport'][k],data_itin['SinkAirport'][k])] = ['dummy']
 # allPathsDAGs tell us the size of the network for each k
     
-# Apr 25 2022 335 sec (5.5 mins)
-# Jul 28 2022 427 sec (7 mins)
+# Sep 22 2022: 941 out of 1626 disrupted itinearies, time was 127 sec
 tim2 =  timer() - timInit
 
 #%%
@@ -229,7 +234,7 @@ mod.setParam(GRB.Param.TimeLimit, timeLim)
 
 # Number of flow conservation constraints
 numflowConstraints = 0
-for k in range(0,totalItin):
+for k in Kdis:
     # number of nodes in the DAG, subtract 1 to remove the source airport
     numflowConstraints += len(allAirportDAGs[k].keys()) - 1
     
@@ -241,7 +246,7 @@ totalFlightNum = len(data_flights['Num'])
 
 # how many y_{fmk}, number of (integer) variables in MIP
 # Apr 25th 2022- 3,02,6016 (whew!)
-sizVarMIP = totalItin * len(cabinTypes) * totalFlightNum
+sizVarMIP = totalKDis * len(cabinTypes) * totalFlightNum
 
 
 numVar = 0 # number of variables in our problem
@@ -261,7 +266,7 @@ objCancelTerm = 0
 # dict storing list of itineraries which have a given flight f in its arc set in cabin class m with some remaining capacity
 dictFlightItinMap = {}
 
-for k in range(0,totalItin): # for each itinerary 
+for k in Kdis: # for each itinerary 
 
     yVar[k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"DummyFlt-Itin-%d" % (k))
     
@@ -298,6 +303,14 @@ for k in range(0,totalItin): # for each itinerary
         
         # # For each flight between the given arc, use flight ID '343' to get row number in flightdata
         # flightRowNumbers = [FindFirstKeyGivenValue(data_recovflights['Num'],v) for v in flightsInThisArc]
+        
+        # if there is only dummy flight, no feasible flights in this itin
+        if flightsInThisArc == ['dummy']:
+            
+            
+            # make it empty so it doesn't enter next loop
+            flightsInThisArc = []
+            flightsWithNonZeroCap = []
         
         # for each flight
         for f in flightsInThisArc:
@@ -354,18 +367,19 @@ for k in range(0,totalItin): # for each itinerary
                     # Constraints
                     
                     # # add flow contraint term if secondNode is not sink
-        if (secondNode != itinSink): 
- 
-            inFlowPaxNumDict[secondNode] += quicksum(yVar[f,m,k] for f in flightsWithNonZeroCap)
+                    else: 
+                        
+                        inFlowPaxNumDict[secondNode] += yVar[f,m,k]
 
-        outFlowPaxNumDict[firstNode] += quicksum(yVar[f,m,k] for f in flightsWithNonZeroCap)
+                    outFlowPaxNumDict[firstNode] += yVar[f,m,k]
                   
     # source airport of itinerary k
     itinSource = data_itin['SourceAirport'][k]  
     # intermediate nodes of the DAG for itin k      
     intermediateNodes = list(outFlowPaxNumDict.keys())
     
-    intermediateNodes.remove(itinSource)
+    if any(intermediateNodes):
+        intermediateNodes.remove(itinSource)
     
     for anyNode in intermediateNodes:
         
@@ -389,6 +403,9 @@ for (f,m),itList in dictFlightItinMap.items():
     #     mod.addConstr(quicksum(yVar[f,m,k] for k in itList) <= GRB.INFINITY, "c4")
         
     if remCap >0 :
+        
+        # sometimes itList is a int, chamge to list then
+        itList = [itList] if isinstance(itList, int) else itList
         
         mod.addConstr(quicksum(yVar[f,m,k] for k in itList) <= remCap, "c4")
     
