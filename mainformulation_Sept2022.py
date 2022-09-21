@@ -101,10 +101,36 @@ data_flights = PrevNextFlightList(flightscsv,data_rotations,data_LegTypes,turnTi
 # their flyng dates (based on Ops solution) and aircraft used
 # (from which seating capacity can be deduced)
 
-
+"""
+Recovered Flights
+"""
 # recovered flights. Keep some keys as original flight data, but some flights could be missing (cancelled) 
 # some flights could be new (added) or departure/arrival times are changed. Remaining capacities could also be changed
-data_recovflights = data_flights # Change this manually
+# data_recovflights = data_flights # Change this manually
+
+
+## we only kept rows 0-574 of OG flight
+recovflightsDataFr = pd.read_csv('recovflights.csv',
+                            names=['Num','Orig','Dest','DepTime','ArrTime','PrevFlightBySameAircraft'],
+                            delim_whitespace=True)
+#Cleaning: CHeck if flights.csv has last row as #, special character,
+# then drop the last row, else this causes problems later.
+recovflightscsv = recovflightsDataFr[:-1].to_dict()
+
+# data_airports=[]
+# # List of airports stored here
+# data_airports.extend(flightscsv['Dest'][keys] for keys in flightscsv['Dest'].keys() if flightscsv['Dest'][keys] not in data_airports)
+# data_airports.extend(flightscsv['Orig'][keys] for keys in flightscsv['Orig'].keys() if flightscsv['Orig'][keys] not in data_airports)
+
+# Call the function to make predecessor and successor for each flight
+# turnaround time in mins to be passed as an argument
+data_recovflights = PrevNextFlightList(recovflightscsv,data_rotations,data_LegTypes,turnTime=30)
+# Now we have list of flights along with predecessor and successors, along with
+# their flyng dates (based on Ops solution) and aircraft used
+# (from which seating capacity can be deduced)
+
+
+
 """
 needs to be done
 """
@@ -124,7 +150,7 @@ data_itin = ConvertItinToDict('itineraries.csv',data_flights) #Itinerary stored 
 
 # Given an itinerary, this is data_flights with an extra key, which tells us how many
 # remaining seats there are in each cabin class. Note that -1 means infinite capacity (ground transport)
-data_flights_withRemCapacity = CabinCapacity(data_flights,data_aircraft,data_itin)
+data_flights_withRemCapacity = CabinCapacity(data_recovflights,data_aircraft,data_itin)
 
 # Feeding initial pax itin gives us zero remaining capacity, we need to check after disruption
 
@@ -132,6 +158,10 @@ MaxLegNumIncrease = 2 # Bound how many legs the recovered pax itinerary has more
 # than the original pax itinerary. Pax don't like it if you add more than 2 legs
 #We don't end up using it, but can be given as cutoff argument when we create the networkx
 # path list inside the function CreatingGraphGivenAnItinerary
+
+# list of all flights in this data set
+listAllFlights = list(data_recovflights['Num'].values())
+
 
 
 # Store a DAG for every itinerary. Dict is used, each key is an itinerary,
@@ -160,12 +190,27 @@ totalItin = len(data_itin['Num']) # Number of itineraries
 # Build the DAGs for every itinerary
 for k in range(0,totalItin):
     if k%50 == 0: print('loop is in iteration',k)
-    allAirportDAGs[k],allFlightDAGs[k],allPathsDAGs[k] = CreatingGraphGivenAnItinerary(data_itin,k,data_flights,data_airports,disrupStartTime,recovByTime,MaxLegNumIncrease)
+    allAirportDAGs[k],allFlightDAGs[k],allPathsDAGs[k] = CreatingGraphGivenAnItinerary(data_itin,k,data_recovflights,data_airports,disrupStartTime,recovByTime,MaxLegNumIncrease)
 # allPathsDAGs tell us the size of the network for each k
     
 # Apr 25 2022 335 sec (5.5 mins)
 # Jul 28 2022 427 sec (7 mins)
 tim2 =  timer() - timInit
+
+#%%
+
+# # dict storing list of itineraries which have a given flight f in its arc set in cabin class m with some remaining capacity
+# dictFlightItinMap = {}
+
+# for flt in listAllFlights:
+#     for m in cabinTypes:
+        
+#         # row number in recovered flight data for flight f
+#         row = FindFirstKeyGivenValue(data_recovflights['Num'],flt)
+#         # capacity of the flight f
+#         remCap = data_recovflights['RemCabinCapacityGivenItin'][row][m]
+        
+        
 
 
 #%%
@@ -210,6 +255,9 @@ objDelayTerm = 0
 objDownGradingTerm = 0
 objCancelTerm = 0
 
+# dict storing list of itineraries which have a given flight f in its arc set in cabin class m with some remaining capacity
+dictFlightItinMap = {}
+
 for k in range(0,totalItin): # for each itinerary 
 
     yVar[k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"DummyFlt-Itin-%d" % (k))
@@ -234,6 +282,8 @@ for k in range(0,totalItin): # for each itinerary
     
     # dictionary of number of pax going out of node i, keys are each node, key values are number of pax sum_{j,m} y_{ijmk} for every out node from i
     outFlowPaxNumDict = dict.fromkeys(list(allAirportDAGs[k].keys()),0)
+    
+    
 
     for arc in ArcSetOfItin.keys(): # for each arc i -> j
         flightsInThisArc = ArcSetOfItin[arc]
@@ -262,6 +312,9 @@ for k in range(0,totalItin): # for each itinerary
                     if upb == -1: # ground transport have -1 as capacity, we set upper bound to infinity here
                         # this flight has some capacity
                         flightsWithNonZeroCap += [f]
+                        
+                        # itin k contains flight f in its arcset with non zero capacity in cabin class m
+                        append_value(dictFlightItinMap,(f,m),k)
                     
                         # set variable names, e.g. y-Flt4498-ArcBIQ->CDG-CabinE-Itin0
                         yVar[f,m,k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"Flt%s-Arc%s->%s-Cabin-%s-Itin-%d" % (f,firstNode,secondNode,m,k))
@@ -270,6 +323,9 @@ for k in range(0,totalItin): # for each itinerary
                     if upb > 0:
                         # this flight has non-zero capacity
                         flightsWithNonZeroCap += [f]
+                        
+                        # itin k contains flight f in its arcset with non zero capacity in cabin class m
+                        append_value(dictFlightItinMap,(f,m),k)
             
                         # set variable names, e.g. y-Flt4498-ArcBIQ->CDG-CabinE-Itin0
                         yVar[f,m,k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = upb ,name="y"+"Flt%s-Arc%s->%s-Cabin-%s-Itin-%d" % (f,firstNode,secondNode,m,k))
@@ -293,19 +349,52 @@ for k in range(0,totalItin): # for each itinerary
                         objDelayTerm += LinExpr(cDelay[f,m,k],yVar[f,m,k])
                         
                     # Constraints
-                    # add number of pax flowing into and out of nodes for flow constraint
                     
-                    else: # add flow contraint term if secondNode is not sink
-                        outFlowPaxNumDict[secondNode] += quicksum(yVar[f,m,k] for f in flightsWithNonZeroCap)
+                    # # add flow contraint term if secondNode is not sink
+        if (secondNode != itinSink): 
+ 
+            inFlowPaxNumDict[secondNode] += quicksum(yVar[f,m,k] for f in flightsWithNonZeroCap)
+
+        outFlowPaxNumDict[firstNode] += quicksum(yVar[f,m,k] for f in flightsWithNonZeroCap)
+                  
+    # source airport of itinerary k
+    itinSource = data_itin['SourceAirport'][k]  
+    # intermediate nodes of the DAG for itin k      
+    intermediateNodes = list(outFlowPaxNumDict.keys())
+    
+    intermediateNodes.remove(itinSource)
+    
+    for anyNode in intermediateNodes:
         
-                    inFlowPaxNumDict[firstNode] += quicksum(yVar[f,m,k] for f in flightsWithNonZeroCap)
-                    
+        # flow constraint for intermediate node
+        mod.addConstr(inFlowPaxNumDict[anyNode] == outFlowPaxNumDict[anyNode],"c1")
+        
+    # second constraint for source node
+    mod.addConstr(outFlowPaxNumDict[itinSource] + yVar[k] == data_itin['PaxCount'][k],"c2")
+ 
+# write fourth constraint
+# for each (f,m) pair with remaining capacity
+for (f,m),itList in dictFlightItinMap.items():
+    
+    # row number in recovered flight data for flight f
+    row = FindFirstKeyGivenValue(data_recovflights['Num'],f)
+    # capacity of the flight f
+    remCap = data_recovflights['RemCabinCapacityGivenItin'][row][m] 
+    
+    # # if remaining capacity is -1, it is infinity
+    # if remCap == -1:
+    #     mod.addConstr(quicksum(yVar[f,m,k] for k in itList) <= GRB.INFINITY, "c4")
+        
+    if remCap >0 :
+        
+        mod.addConstr(quicksum(yVar[f,m,k] for k in itList) <= remCap, "c4")
+    
+# update the model  
+mod.update()  
                         
-# define the total obj term
+# define the objective term of the MIP
 totalObjTerm = objDelayTerm + objDownGradingTerm + objCancelTerm
 
-mod.setObjective(totalObjTerm, GRB.MINIMIZE)
-                    
                 
 # Apr 25 2022: we prune to only use flights with non zero remaining capacity: numVar = 168006 for
 # 1659 itineraries, 608 flights, 35 airports, 3 cabin classes
@@ -315,28 +404,37 @@ mod.setObjective(totalObjTerm, GRB.MINIMIZE)
 # size(cDown) = 7382
 # not bad, easier to compute objective  
 
+# set objective
+mod.setObjective(totalObjTerm,GRB.MINIMIZE)
+
+mod.update()
+    
+# initialize output variables
+out = 0 # output, the runtime
+time_terminate = 0 # indicator for exceeding time threshold
+optVal = 0 # optimal value
 
 #%%
+# Optimize model
+mod.optimize()
 
-m = 'E'
-k = 0
+# run time
+out = mod.RunTime
 
-arc = ('BIQ', 'CDG')
+# if we have an optimal solution
+if mod.status == GRB.OPTIMAL:
+    # record the optimal solution
+    optVal = mod.objVal
 
-f = '4498'
-f =  '4502'
+# if the given time limit is exceeded
+if mod.status==GRB.TIME_LIMIT:
+    # set indicator variable to 1
+    time_terminate = 1
 
-arc =  ('BIQ', 'ORY')
-
-f = '4344'
-f = '4348'
-f =  '4352'
-f = '4354'
-f ='4358'
-
-arc = ('CDG', 'ORY')
+optVal,out,time_terminate
 
 
-someFlight,someCabinClass,someItin,recovFlightData,origItinData,flightTypeData,allCostsDict = f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts
+# mod.computeIIS() 
+# mod.write("MIP1.ilp")
 
-            
+#%%

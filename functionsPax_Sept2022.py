@@ -59,6 +59,25 @@ def make_zeros(n_rows: int, n_columns: int):
         matrix.append([0.0] * n_columns)
     return matrix
 
+"""
+append new value to existing key values of a dict, create new if empty
+e.g., append_value(word_freq, 'at', 21)
+"""
+def append_value(dict_obj, key, value):
+    # Check if key exist in dict or not
+    if key in dict_obj:
+        # Key exist in dict.
+        # Check if type of value of key is list or not
+        if not isinstance(dict_obj[key], list):
+            # If type is not list then make it list
+            dict_obj[key] = [dict_obj[key]]
+        # Append the value in list
+        dict_obj[key].append(value)
+    else:
+        # As key is not in dict,
+        # so, add key-value pair
+        dict_obj[key] = value
+
 
 " Functions used in preprocessing the data"
 
@@ -122,7 +141,7 @@ def DelDownCanCosts(configData):
     # return a highly nested dictionary with all cost parameters
     return(dictAllCosts)       
     
-" Remaining capacity of each flight when a given itin is implemented"
+" Remaining capacity of each flight when a given itin dataset is implemented"
 # if you pass data_flights, it should output full capacities
 # if you pass data_recovflights, it should output remaining capacities
 def CabinCapacity(someflightData,aircraftData,itinData):
@@ -475,6 +494,7 @@ def CreatingGraphGivenAnItinerary(itinData,itinIndex,flightData,allAirports,disr
     
     # cutoff argument can be used to restrict the length of paths
     # https://networkx.github.io/documentation/networkx-1.9/reference/generated/networkx.algorithms.simple_paths.all_simple_paths.html
+    
     allpaths = nx.all_simple_paths(G,source=itin_SourceAirport,target=itin_SinkAirport,
                                    cutoff = itin_NumOfLegs + MaxLegNumIncrease)
 
