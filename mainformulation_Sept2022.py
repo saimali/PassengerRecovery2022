@@ -22,6 +22,9 @@ from collections import Counter
 import itertools
 import numpy as np
 
+# so that you have the functions available here and not have to run that every time
+from functionsPax_Sept2022 import *
+
 #%%
 
 #########################################################################

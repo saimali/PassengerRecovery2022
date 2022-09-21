@@ -44,7 +44,7 @@ def CompareDate_IsFirstBigger(xDate,yDate):
     
     return(x2>y2) # Boolean if x>ys
 
-    
+# NP has a builtin for zeros (np.zeros) why not use that?
 """
 This function makes a zero matrix.
 Parameters:
