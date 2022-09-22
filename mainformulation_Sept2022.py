@@ -19,6 +19,35 @@ from collections import Counter
 import itertools
 import numpy as np
 
+#%%
+"""
+Set the current directory for data files from 32 possible datasets in the ROADEF challenge
+"""
+
+# name of the files used for the simulations, 
+# get current working directory
+parent_dir = str(os.getcwd())
+# get csv files in subdirectory for this setup   
+
+# all 32 data files
+all_dataFiles = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/*'))
+
+# 10 A instances
+files_Ainstances = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/A_instances/*'))
+#10 B instances
+files_Binstances = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/A_instances/*'))
+# 12 X instances
+files_Xinstances = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/A_instances/*'))
+
+# first A dataset
+currentDir = files_Ainstances[2]
+
+
+
+#%%
+#########################################################################
+"DATA PREPROCESSING"
+
 # First run functionsPax.py to load the functions
 # run functionsPax
 from functionsPax_Sept2022 import *
@@ -26,15 +55,15 @@ from functionsPax_Sept2022 import *
 # generate random recovery file
 from generateRandomRecovery import *
 
-#%%
+defaultDate = '07/01/06'
 
-#########################################################################
-"DATA PREPROCESSING"
+GenerateRandomFlightRecoveryFile(currentDir,defaultDate)
+
 
 # Note: Write the column names in all the csv files manually
 #Aircraft.csv
 # Use this to get seat capacity of aircrafts given model number
-data_aircraft = pd.read_csv('aircraft.csv',names=['Aircraft','Model','Family',
+data_aircraft = pd.read_csv(currentDir+'/aircraft.csv',names=['Aircraft','Model','Family',
                                                   'Config','Dist','CostPerHour',
                                                   'TurnRound','Transit','Orig',
                                                   'Maint'], delim_whitespace = True).to_dict()
@@ -45,7 +74,7 @@ data_aircraft = ConvertAircraftToDict(data_aircraft)
 
 #config.csv
 # cost parameters and regulation costs are given here
-data_config = pd.read_csv('config.csv').to_dict() #scenario parameters
+data_config = pd.read_csv(currentDir+'/config.csv').to_dict() #scenario parameters
 # But we hardcode as a separate function
 dictAllCosts = DelDownCanCosts(data_config)
 # returns a dict that looks like {'Down': dictDownCosts, 'Delay': dictDelCosts,
@@ -61,13 +90,13 @@ dictAllCosts = DelDownCanCosts(data_config)
 # Note: Assumed that Flight 555 flies only flies on one date. If some flight is being 
 # used on comsecutive days in Ops Solution, we have to assign different flight IDs
 # and only use this format of rotations.csv
-data_rotations = pd.read_csv('rotations.csv', names = ['FlightNum','DepDate','Aircraft'],
+data_rotations = pd.read_csv(currentDir+'/rotations.csv', names = ['FlightNum','DepDate','Aircraft'],
                              delim_whitespace=True).to_dict()
 
 #dist.csv
 # Given any two airports, this assigns type of any flight between them,
 # i.e. Domestic/Continental/Intercontinental
-data_LegTypes = FindFlightTypes('dist.csv')
+data_LegTypes = FindFlightTypes(currentDir+'/dist.csv')
 # If the last line of dist.csv is a # (hashtag) then there might be a stray
 # node ('#',nan) in the output. We can simply ignore this
 # sanity check for above dictionary: size should be #airports*(#airports-1)
@@ -87,7 +116,7 @@ recovByTime = datetime.combine(recovEndDate,recovEndTime)
 # hard deadline for pax to get to their destinations
 
 # Flights.csv
-flightsDataFr = pd.read_csv('flights.csv',
+flightsDataFr = pd.read_csv(currentDir+'/flights.csv',
                             names=['Num','Orig','Dest','DepTime','ArrTime','PrevFlightBySameAircraft'],
                             delim_whitespace=True)
 #Cleaning: Check if flights.csv has last row as #, special character,
@@ -115,7 +144,7 @@ Recovered Flights
 
 
 ## we only kept some rows of OG flight set
-recovflightsDataFr = pd.read_csv('random_recovered_flights.csv',
+recovflightsDataFr = pd.read_csv(currentDir+'/random_recovered_flights.csv',
                             names=['Num','Orig','Dest','DepTime','ArrTime','PrevFlightBySameAircraft'],
                             delim_whitespace=True)
 #Cleaning: CHeck if flights.csv has last row as #, special character,
@@ -139,7 +168,7 @@ data_recovflights = PrevNextFlightList(recovflightscsv,data_rotations,data_LegTy
 # For Itin file, headers are Ident Type Price Count (Flight DepDate Cabin)+
 # Each row can have different number of columns, hence we do the conversion
 # into a dictionary in a separate function
-data_itin = ConvertItinToDict('itineraries.csv',data_flights) #Itinerary stored as Dict
+data_itin = ConvertItinToDict(currentDir+'/itineraries.csv',data_flights) #Itinerary stored as Dict
 
 # Therefore data_itin will be the original pax itin. Our MIP will calculate
 # recovered pax itin.
@@ -453,8 +482,32 @@ if mod.status==GRB.TIME_LIMIT:
 
 optVal,out,time_terminate
 
+yOpt = mod.x
+yZero = yOpt.count(0.0)
 
+ySize = mod.NumVars
 # mod.computeIIS() 
 # mod.write("MIP1.ilp")
 
 #%%
+
+with open(currentDir+"/AllDetailsAboutMIPSolution.txt", "a") as somf:
+
+    print('Total itineraries %d' % totalItin, file = somf)
+    print('Disrupted itineraries %d' % len(Kdis), file = somf)
+    print('Total #flights %d' % totalFlightNum, file = somf)
+    print('Preprocessing time %f' % tim2, file = somf)
+    print('MIP runtime %f' % out, file = somf)
+    print('MIP objective %f' % optVal, file = somf)
+    print('MIP number of zero variables %f out of %d' % (yZero,ySize), file = somf)
+
+#%%
+
+"""
+Implement Multi-Label Shortest Paths
+"""
+
+
+
+
+

@@ -1,0 +1,7 @@
+Total itineraries 1659
+Disrupted itineraries 1067
+Total #flights 608
+Preprocessing time 160.410026
+MIP runtime 0.163978
+MIP objective 10101840.500000
+MIP number of zero variables 69373.000000 out of 70657

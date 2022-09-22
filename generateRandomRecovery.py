@@ -38,23 +38,27 @@ def addTime(inputTime, delay):
     newTime = inputTimeDelayed.strftime("%H:%M") + suffix 
     return newTime
 
-flightsDataFr = pd.read_csv('flights.csv',
-                            names=['Num','Orig','Dest','DepTime','ArrTime','PrevFlightBySameAircraft'],
-                            delim_whitespace=True)
+def GenerateRandomFlightRecoveryFile(currentDir,defaultDate):
 
-bad_rows = flightsDataFr['Num'].str.contains('#')
-
-flightsDataFr = flightsDataFr[~bad_rows]
-
-
-flightsDataFr['Delay'] = flightsDataFr['Orig'].apply(randomDelay)
-
-flightsRecovered = flightsDataFr.sample(frac=0.8)
-flightsRecovered['DepTime'] = flightsRecovered.apply(lambda x: addTime(x['DepTime'], x['Delay']), axis=1)
-flightsRecovered['ArrTime'] = flightsRecovered.apply(lambda x: addTime(x['ArrTime'], x['Delay']), axis=1)
-
-flightsRecovered.drop('Delay', axis=1, inplace=True)
-flightsRecovered.to_csv('random_recovered_flights.csv', index=False, header=False, sep=" ")
-
-with open("random_recovered_flights.csv","a") as myfile:
-    myfile.write("#")
+    flightsDataFr = pd.read_csv(currentDir+'/flights.csv',
+                                names=['Num','Orig','Dest','DepTime','ArrTime','PrevFlightBySameAircraft'],
+                                delim_whitespace=True)
+    
+    bad_rows = flightsDataFr['Num'].str.contains('#')
+    
+    flightsDataFr = flightsDataFr[~bad_rows]
+    
+    
+    flightsDataFr['Delay'] = flightsDataFr['Orig'].apply(randomDelay)
+    
+    flightsRecovered = flightsDataFr.sample(frac=0.8)
+    flightsRecovered['DepTime'] = flightsRecovered.apply(lambda x: addTime(x['DepTime'], x['Delay']), axis=1)
+    flightsRecovered['ArrTime'] = flightsRecovered.apply(lambda x: addTime(x['ArrTime'], x['Delay']), axis=1)
+    
+    flightsRecovered.drop('Delay', axis=1, inplace=True)
+    flightsRecovered.to_csv(currentDir+'/random_recovered_flights.csv', index=False, header=False, sep=" ")
+    
+    with open(currentDir+"/random_recovered_flights.csv","a") as myfile:
+        myfile.write("#")
+        
+    return 
