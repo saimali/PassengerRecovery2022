@@ -7,14 +7,10 @@ from datetime import date, timedelta
 import fileinput
 
 #%%
-# disruption date
-defaultDate = '07/01/06'
-
-#%%
 def randomDelay(dummy):
     
     # positive delay minutes
-    posDelaynumber = timedelta(hours=np.random.randint(0,7), minutes=np.random.randint(0,60))
+    posDelaynumber = timedelta(hours=np.random.randint(0,15), minutes=np.random.randint(0,60))
     # no delay
     noDelay = timedelta(hours=0, minutes=0)
     
@@ -22,9 +18,9 @@ def randomDelay(dummy):
     twoDelayOptions = [posDelaynumber,noDelay]
     
     # return no delay wp 0.4, some pos delay wp 0.6
-    return random.choices(twoDelayOptions,[0.4,0.6])[0]
+    return random.choices(twoDelayOptions,[0.6,0.4])[0]
 
-def addTime(inputTime, delay):
+def addTime(inputTime, delay,defaultDate):
 
     if pd.isna(inputTime):
         return inputTime
@@ -51,9 +47,9 @@ def GenerateRandomFlightRecoveryFile(currentDir,defaultDate):
     
     flightsDataFr['Delay'] = flightsDataFr['Orig'].apply(randomDelay)
     
-    flightsRecovered = flightsDataFr.sample(frac=0.8)
-    flightsRecovered['DepTime'] = flightsRecovered.apply(lambda x: addTime(x['DepTime'], x['Delay']), axis=1)
-    flightsRecovered['ArrTime'] = flightsRecovered.apply(lambda x: addTime(x['ArrTime'], x['Delay']), axis=1)
+    flightsRecovered = flightsDataFr.sample(frac=0.5)
+    flightsRecovered['DepTime'] = flightsRecovered.apply(lambda x: addTime(x['DepTime'], x['Delay'],defaultDate), axis=1)
+    flightsRecovered['ArrTime'] = flightsRecovered.apply(lambda x: addTime(x['ArrTime'], x['Delay'],defaultDate), axis=1)
     
     flightsRecovered.drop('Delay', axis=1, inplace=True)
     flightsRecovered.to_csv(currentDir+'/random_recovered_flights.csv', index=False, header=False, sep=" ")

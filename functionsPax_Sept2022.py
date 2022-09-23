@@ -377,7 +377,7 @@ def ConvertItinToDict(fileName,flightData):
         for j in range(0,len(lines)-1):
             # Count the column count for the current line
             l = lines[j]
-            l_split = l.split(filename_delimiter)
+            l_split = list(filter(None,l.split(filename_delimiter)))
             siz = len(l_split)
             
             # The source flight's row index in the flightData file
@@ -490,8 +490,7 @@ def NextReachableAirport(givenAirport,givenDateTime,flightData,recovByTime):
         earliestTime[airport] = min(tempDict[airport])
         
     
-    
-    return(outAirports,earliestTime)
+    return(outAirports,earliestTime,candidateFlights)
     
 #Recursive function that builds the graph given an itinerary
 # itinIndex should start from 1 ? Unclear.
@@ -595,6 +594,155 @@ def CreatingGraphGivenAnItinerary(itinData,itinIndex,flightData,allAirports,disr
     return(airportDAG,flightDAG,pathsDAG)
 
 
+#Recursive function that builds the graph given an itinerary
+# no paths are generated since it's expensive
+def CreatingGraphGivenAnItineraryNoPaths(itinData,itinIndex,flightData,allAirports,disrupStartTime,recovByTime,MaxLegNumIncrease):
+# Lots of pruning happens inside.
+    
+    itin_Num = itinData['Num'][itinIndex] # check itineraries.csv in this row
+    itin_InOrOut = itinData['InOrOut'][itinIndex] # In or Ourbound itinerary?
+    itin_UnitCost = itinData['UnitCost'][itinIndex] # Unit cost per pax in Euros
+    itin_PaxCount = itinData['PaxCount'][itinIndex] # Number of pax in this itin
+    itin_NumOfLegs = itinData['NumOfLegs'][itinIndex] # Number of flight legs in this itin
+    itin_LegFlightNum = itinData['LegFlightNum'][itinIndex] # Each leg's flight number
+    itin_LegCabinClass = itinData['LegCabinClass'][itinIndex] # Each leg's cabin class
+    itin_SourceAirport = itinData['SourceAirport'][itinIndex] # Source airport for whole itinerary
+    itin_SinkAirport = itinData['SinkAirport'][itinIndex] # Sink airport for whole itinerary
+    itin_EndTime = itinData['ItinEndTime'][itinIndex] # Whole itin end time at sink airport
+    
+    itin_StartTime = itinData['ItinStartTime'][itinIndex] # Whole itin start time at source airport
+    itin_LegFlyDate = itinData['LegFlyDate'][itinIndex] # Each leg's flying date
+    # Storing starting date and time of first leg of itinerary as a DateTime object
+    # itin_LegFlyDate[0] because the flying date of the first leg only
+    itinDateTime = ConvertFlightTime(itin_StartTime,itin_LegFlyDate[0])
+    
+    # Outputs
+    airportDAG = {} # Output will be a dictionary, like an adjacency matrix
+    # looks like { "a" : ["d"], "b" : ["c"], "c": ["b","c","d"], "f": []}
+    flightDAG = {} # Output will be a dictionary of feasible flights in the same context.
+    # given an origin and a destination airport pair as key, the values are the list of 
+    # flights between them.
+    
+    # Initialize a list of nodes which are reachable from source or sink
+    initialNodes = [itin_SourceAirport,itin_SinkAirport]
+    
+    # Nodes visited so far, put False for all airports in the whole network
+    visited = dict.fromkeys(allAirports,False)
+    airportDAG,flightDAG = GraphBuilderSep2022(itin_SourceAirport,itinDateTime,flightData,
+                                        itin_SinkAirport,recovByTime,visited,MaxLegNumIncrease,itin_NumOfLegs)
+    
+    # intermedNodes will only have nodes which are actually on a path from
+    # source to sink airports
+    
+    # airportDAG and flightDAG still contain arcs which don't lead to the sink.
+    # It has paths not leading to sink as well, we have to prune this using intermedNodes
+    
+    ######## Pruning airportDAG and flightDAG ########
+    # This will have only feasible arcs (i,j) which are on some path from
+    # source to sink, also removes arcs going into sourceAirport
+    prunedNodeSet = set()
+    for airp1 in airportDAG.keys():
+        for airp2 in airportDAG[airp1]:
+            prunedNodeSet.add((airp1,airp2))
+            
+    # Complement of feasible arcs, i.e. unwanted arcs
+    unwantedNodepairs = set(flightDAG.keys()) - prunedNodeSet
+    for unwanted_key in unwantedNodepairs: del flightDAG[unwanted_key]
+    # Now flightDAG will only have keys of the form (JFK,BOS) if both JFK and BOS
+    # are intermediate nodes on a path from source to sink
+    
+    # Dict of all patha from sourceAirport to sinkAirport. Keys are just indexing of paths
+    pathsDAG = {}
+    j = 0
+    # Using networkx package's graph structure
+    G = nx.DiGraph(list(flightDAG.keys()))
+    # cutoff argument can be used to restrict the length of paths
+    # https://networkx.github.io/documentation/networkx-1.9/reference/generated/networkx.algorithms.simple_paths.all_simple_paths.html
+    if any(flightDAG):
+        allpaths = nx.all_simple_paths(G,source=itin_SourceAirport,target=itin_SinkAirport,
+                                        cutoff = itin_NumOfLegs + MaxLegNumIncrease)
+    else:
+        allpaths = []
+
+    # Only reachable nodes from source to sink
+    reachableNodesOnly = set([itin_SourceAirport,itin_SinkAirport])                 
+    prunedNodeSet2 = set()
+   
+    # Use flightDAG to get new airportDAG. this gives accurate arc list
+    airportDAG = {}
+    # Each key is a tuple (JFK,BOS)
+    # RUNTIME COMMENT: THIS LOOP SEEMS TO BE REALLY SLOW
+    for tuplekey in flightDAG.keys():
+        
+        # {JFK:[BOS]} is assigned
+        airportDAG.setdefault(tuplekey[0],[]).append(tuplekey[1])
+        
+    # this will output the right network, unless there are edge cases
+    return(airportDAG,flightDAG,pathsDAG)
+
+
+# Recursive function that buils a graph given source + time and sink    
+def GraphBuilderSep2022(givenAirport,givenDateTime,flightData,sinkAirport,recovByTime,visited,MaxLegNumIncrease,origNumofLegs):  
+    
+    
+    airportDict = {}
+    flightDict = {}
+    ## nodeList = [givenAirport,sinkAirport]
+    # From givenAirports, produce dict of reachable airports
+    # and corr flights, as well as dict of reachable airports and
+    # earliest possible time that airport can be reached from givenAirport
+    NextAirportsFlights,NextAirportEarliestTimes,candidateFlights = NextReachableAirport(givenAirport,givenDateTime,flightData,recovByTime)
+    
+    # Add all the reachable airports to the key givenAirport of airportDict
+    # Therefore we now know all arcs (givenAirport,dest) are in the graph
+    # the argument inside extend() is to avoid duplication when extending lists
+    airportDict[givenAirport] = list(NextAirportsFlights.keys())
+    # legCount += 1
+    
+    visited[givenAirport] = True
+    
+    #max number of legs in new graph
+    recursionLimit = MaxLegNumIncrease + origNumofLegs
+    
+   # visited[givenAirport] = min(visited[givenAirport],currLeg)
+    # For every airport reachble from givenAirport and every flight used
+    # to reach this destination,
+    for dest in NextAirportsFlights.keys():
+        for flgt in NextAirportsFlights[dest]:
+            
+            # Add the flight to the ordered pair key (givenAirport,dest) of flightDict
+            # Therefore we add flgt to the list of flights between (givenAirport,dest)
+            flightDict.setdefault((givenAirport,dest),[]).append(flgt)
+            
+    # For every airport reachable from givenAirport and every flight used
+    # to reach this destination,
+    for dest in NextAirportsFlights.keys():
+        # for flgt in NextAirportsFlights[dest]:
+            # Find next arc as long as we haven't reached sinkAirport already
+        if dest != sinkAirport:
+            if visited[dest] == False:
+                # starting from dest, recursive call to build next airports, we use
+                # earliest time dest can be reached, and only look at flights from dest
+                # that start after this time
+                destStartTime = NextAirportEarliestTimes[dest]
+                # nodeList is a list of nodes which are in a path from givenAirport to sinkAirport
+                # USeful for pruning nodes in the output which are not on a path to sinkAirport
+                ##if dest not in nodeList:
+                 ## nodeList.append(dest)
+                # Recursive step
+                ## delted Cout
+                aOut,bOut = GraphBuilderSep2022(dest,destStartTime,flightData,sinkAirport,recovByTime,visited,MaxLegNumIncrease,origNumofLegs)
+                airportDict.setdefault(dest,[]).extend(x for x in aOut[dest] if x not in airportDict[dest])
+                flightDict.update(bOut)
+                ## nodeList.extend( x for x in cOut if x not in nodeList)
+        #else:
+            ## deleted nodeList
+            #return(airportDict,flightDict)
+     ## deleted nodeList
+    return(airportDict,flightDict)
+  
+
+
 # Recursive function that buils a graph given source + time and sink    
 def GraphBuilder(givenAirport,givenDateTime,flightData,sinkAirport,recovByTime,visited):  
     
@@ -604,7 +752,7 @@ def GraphBuilder(givenAirport,givenDateTime,flightData,sinkAirport,recovByTime,v
     # From givenAirports, produce dict of reachable airports
     # and corr flights, as well as dict of reachable airports and
     # earliest possible time that airport can be reached from givenAirport
-    NextAirportsFlights,NextAirportEarliestTimes = NextReachableAirport(givenAirport,givenDateTime,flightData,recovByTime)
+    NextAirportsFlights,NextAirportEarliestTimes,_ = NextReachableAirport(givenAirport,givenDateTime,flightData,recovByTime)
     
     # Add all the reachable airports to the key givenAirport of airportDict
     # Therefore we now know all arcs (givenAirport,dest) are in the graph
@@ -645,7 +793,7 @@ def GraphBuilder(givenAirport,givenDateTime,flightData,sinkAirport,recovByTime,v
         #else:
             ## deleted nodeList
             #return(airportDict,flightDict)
-    visited[givenAirport] = False
+    visited[givenAirport] = True
      ## deleted nodeList
     return(airportDict,flightDict)
                 

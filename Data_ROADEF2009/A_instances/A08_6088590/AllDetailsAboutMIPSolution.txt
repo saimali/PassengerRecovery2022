@@ -1,0 +1,1111 @@
+Total itineraries 1608
+Disrupted itineraries 1006
+Total #flights 608
+Total #airports 35
+Preprocessing time 7.152021
+MIP runtime 0.038644
+MIP objective 13747082.800000
+MIP number of zero variables 17765.000000 out of 18838
+itin 1: OG pax count 122, sol cancelled  122
+itin 2: OG pax count 27, sol put 27 pax on flight 4436 in cabin E
+itin 3: OG pax count 88, sol cancelled  67
+itin 3 partially cancelled
+itin 3: OG pax count 88, sol put 21 pax on flight 1364 in cabin E
+itin 4: OG pax count 18, sol cancelled  18
+itin 5: OG pax count 25, sol put 25 pax on flight 1364 in cabin E
+itin 6: OG pax count 7, sol cancelled  7
+itin 10: OG pax count 68, sol cancelled  68
+itin 11: OG pax count 18, sol cancelled  18
+itin 12: OG pax count 40, sol cancelled  40
+itin 13: OG pax count 5, sol cancelled  5
+itin 17: OG pax count 107, sol cancelled  107
+itin 18: OG pax count 34, sol cancelled  34
+itin 22: OG pax count 18, sol cancelled  18
+itin 24: OG pax count 5, sol cancelled  5
+itin 25: OG pax count 134, sol cancelled  134
+itin 26: OG pax count 5, sol cancelled  5
+itin 29: OG pax count 93, sol cancelled  93
+itin 30: OG pax count 18, sol cancelled  18
+itin 31: OG pax count 20, sol cancelled  20
+itin 32: OG pax count 6, sol cancelled  6
+itin 33: OG pax count 84, sol cancelled  84
+itin 34: OG pax count 30, sol cancelled  15
+itin 34 partially cancelled
+itin 34: OG pax count 30, sol put 15 pax on flight 68 in cabin F
+itin 34: OG pax count 30, sol put 15 pax on flight 4197 in cabin E
+itin 35: OG pax count 74, sol cancelled  74
+itin 36: OG pax count 17, sol cancelled  17
+itin 37: OG pax count 31, sol put 31 pax on flight 4200 in cabin E
+itin 37: OG pax count 31, sol put 31 pax on flight 144 in cabin F
+itin 38: OG pax count 8, sol cancelled  8
+itin 42: OG pax count 96, sol cancelled  96
+itin 43: OG pax count 17, sol cancelled  17
+itin 44: OG pax count 16, sol put 16 pax on flight 4202 in cabin E
+itin 44: OG pax count 16, sol put 16 pax on flight 144 in cabin F
+itin 45: OG pax count 5, sol cancelled  5
+itin 48: OG pax count 59, sol cancelled  59
+itin 49: OG pax count 37, sol cancelled  37
+itin 50: OG pax count 19, sol cancelled  19
+itin 51: OG pax count 14, sol cancelled  14
+itin 52: OG pax count 96, sol cancelled  96
+itin 53: OG pax count 32, sol put 32 pax on flight 71 in cabin E
+itin 53: OG pax count 32, sol put 21 pax on flight 4197 in cabin E
+itin 53: OG pax count 32, sol put 11 pax on flight 4203 in cabin E
+itin 54: OG pax count 89, sol cancelled  89
+itin 55: OG pax count 17, sol cancelled  17
+itin 56: OG pax count 21, sol put 5 pax on flight 4200 in cabin E
+itin 56: OG pax count 21, sol put 16 pax on flight 4202 in cabin E
+itin 56: OG pax count 21, sol put 21 pax on flight 144 in cabin F
+itin 57: OG pax count 6, sol cancelled  6
+itin 60: OG pax count 54, sol cancelled  54
+itin 61: OG pax count 11, sol cancelled  11
+itin 62: OG pax count 12, sol cancelled  12
+itin 63: OG pax count 3, sol cancelled  3
+itin 68: OG pax count 54, sol cancelled  54
+itin 69: OG pax count 11, sol cancelled  11
+itin 70: OG pax count 12, sol cancelled  12
+itin 71: OG pax count 3, sol cancelled  3
+itin 72: OG pax count 55, sol cancelled  55
+itin 73: OG pax count 11, sol cancelled  11
+itin 74: OG pax count 12, sol cancelled  12
+itin 75: OG pax count 3, sol cancelled  3
+itin 77: OG pax count 5, sol cancelled  5
+itin 79: OG pax count 2, sol cancelled  2
+itin 81: OG pax count 5, sol cancelled  5
+itin 83: OG pax count 2, sol cancelled  2
+itin 87: OG pax count 14, sol cancelled  14
+itin 89: OG pax count 4, sol cancelled  4
+itin 94: OG pax count 16, sol cancelled  16
+itin 96: OG pax count 6, sol cancelled  6
+itin 97: OG pax count 43, sol cancelled  43
+itin 98: OG pax count 9, sol cancelled  9
+itin 99: OG pax count 13, sol cancelled  13
+itin 100: OG pax count 3, sol cancelled  3
+itin 101: OG pax count 55, sol cancelled  55
+itin 102: OG pax count 11, sol cancelled  11
+itin 103: OG pax count 12, sol cancelled  12
+itin 104: OG pax count 3, sol cancelled  3
+itin 109: OG pax count 55, sol cancelled  55
+itin 110: OG pax count 25, sol cancelled  25
+itin 111: OG pax count 52, sol cancelled  52
+itin 112: OG pax count 11, sol cancelled  11
+itin 113: OG pax count 14, sol cancelled  14
+itin 114: OG pax count 2, sol cancelled  2
+itin 115: OG pax count 45, sol cancelled  45
+itin 116: OG pax count 15, sol cancelled  15
+itin 124: OG pax count 11, sol cancelled  11
+itin 126: OG pax count 4, sol cancelled  4
+itin 132: OG pax count 22, sol cancelled  22
+itin 133: OG pax count 5, sol cancelled  5
+itin 134: OG pax count 6, sol cancelled  6
+itin 135: OG pax count 2, sol cancelled  2
+itin 136: OG pax count 43, sol cancelled  43
+itin 137: OG pax count 13, sol cancelled  13
+itin 138: OG pax count 20, sol cancelled  20
+itin 139: OG pax count 5, sol cancelled  5
+itin 140: OG pax count 11, sol cancelled  5
+itin 140 partially cancelled
+itin 140: OG pax count 11, sol put 6 pax on flight 2587 in cabin E
+itin 141: OG pax count 3, sol put 3 pax on flight 2595 in cabin E
+itin 141: OG pax count 3, sol put 3 pax on flight 2599 in cabin E
+itin 144: OG pax count 53, sol cancelled  53
+itin 145: OG pax count 13, sol cancelled  13
+itin 146: OG pax count 25, sol cancelled  25
+itin 147: OG pax count 6, sol cancelled  6
+itin 149: OG pax count 19, sol cancelled  19
+itin 150: OG pax count 5, sol cancelled  5
+itin 151: OG pax count 12, sol cancelled  9
+itin 151 partially cancelled
+itin 151: OG pax count 12, sol put 3 pax on flight 2595 in cabin E
+itin 152: OG pax count 3, sol cancelled  3
+itin 153: OG pax count 39, sol cancelled  38
+itin 153 partially cancelled
+itin 153: OG pax count 39, sol put 1 pax on flight 2596 in cabin E
+itin 154: OG pax count 5, sol put 5 pax on flight 2596 in cabin E
+itin 155: OG pax count 29, sol cancelled  29
+itin 156: OG pax count 4, sol cancelled  4
+itin 159: OG pax count 14, sol cancelled  14
+itin 160: OG pax count 4, sol put 4 pax on flight 2601 in cabin E
+itin 161: OG pax count 9, sol put 8 pax on flight 2598 in cabin E
+itin 161: OG pax count 9, sol put 1 pax on flight 2601 in cabin E
+itin 161: OG pax count 9, sol put 1 pax on flight 2602 in cabin E
+itin 162: OG pax count 2, sol cancelled  2
+itin 163: OG pax count 21, sol cancelled  21
+itin 164: OG pax count 11, sol cancelled  4
+itin 164 partially cancelled
+itin 164: OG pax count 11, sol put 7 pax on flight 2600 in cabin E
+itin 169: OG pax count 13, sol cancelled  9
+itin 169 partially cancelled
+itin 169: OG pax count 13, sol put 4 pax on flight 2602 in cabin E
+itin 170: OG pax count 3, sol cancelled  3
+itin 171: OG pax count 3, sol put 3 pax on flight 2602 in cabin E
+itin 172: OG pax count 1, sol put 1 pax on flight 2600 in cabin E
+itin 173: OG pax count 25, sol cancelled  21
+itin 173 partially cancelled
+itin 173: OG pax count 25, sol put 4 pax on flight 2603 in cabin E
+itin 174: OG pax count 4, sol put 4 pax on flight 2603 in cabin E
+itin 175: OG pax count 21, sol cancelled  21
+itin 176: OG pax count 8, sol cancelled  8
+itin 178: OG pax count 5, sol cancelled  5
+itin 180: OG pax count 2, sol cancelled  2
+itin 187: OG pax count 44, sol cancelled  44
+itin 188: OG pax count 10, sol cancelled  10
+itin 189: OG pax count 16, sol cancelled  16
+itin 190: OG pax count 4, sol cancelled  4
+itin 200: OG pax count 4, sol cancelled  4
+itin 202: OG pax count 2, sol cancelled  2
+itin 210: OG pax count 13, sol cancelled  13
+itin 212: OG pax count 5, sol cancelled  5
+itin 214: OG pax count 11, sol cancelled  11
+itin 216: OG pax count 4, sol put 4 pax on flight 2874 in cabin E
+itin 216: OG pax count 4, sol put 4 pax on flight 129 in cabin F
+itin 225: OG pax count 72, sol cancelled  72
+itin 226: OG pax count 13, sol cancelled  13
+itin 227: OG pax count 12, sol cancelled  12
+itin 228: OG pax count 3, sol cancelled  3
+itin 233: OG pax count 48, sol cancelled  48
+itin 234: OG pax count 11, sol cancelled  11
+itin 235: OG pax count 16, sol cancelled  16
+itin 236: OG pax count 4, sol cancelled  4
+itin 237: OG pax count 41, sol cancelled  41
+itin 238: OG pax count 10, sol cancelled  10
+itin 239: OG pax count 22, sol cancelled  22
+itin 240: OG pax count 5, sol cancelled  5
+itin 244: OG pax count 3, sol cancelled  3
+itin 246: OG pax count 9, sol cancelled  9
+itin 248: OG pax count 3, sol cancelled  3
+itin 249: OG pax count 42, sol cancelled  42
+itin 250: OG pax count 10, sol cancelled  10
+itin 251: OG pax count 21, sol cancelled  21
+itin 252: OG pax count 5, sol cancelled  5
+itin 257: OG pax count 17, sol cancelled  16
+itin 257 partially cancelled
+itin 257: OG pax count 17, sol put 1 pax on flight 2654 in cabin E
+itin 258: OG pax count 4, sol cancelled  4
+itin 259: OG pax count 7, sol put 7 pax on flight 2654 in cabin E
+itin 260: OG pax count 2, sol cancelled  2
+itin 262: OG pax count 9, sol cancelled  9
+itin 266: OG pax count 11, sol cancelled  11
+itin 268: OG pax count 4, sol cancelled  4
+itin 269: OG pax count 13, sol cancelled  13
+itin 270: OG pax count 3, sol cancelled  3
+itin 271: OG pax count 7, sol cancelled  7
+itin 272: OG pax count 2, sol cancelled  2
+itin 273: OG pax count 18, sol cancelled  18
+itin 274: OG pax count 4, sol cancelled  4
+itin 275: OG pax count 6, sol cancelled  2
+itin 275 partially cancelled
+itin 275: OG pax count 6, sol put 4 pax on flight 2658 in cabin E
+itin 276: OG pax count 2, sol put 2 pax on flight 2874 in cabin E
+itin 281: OG pax count 35, sol cancelled  35
+itin 282: OG pax count 5, sol cancelled  5
+itin 283: OG pax count 5, sol cancelled  5
+itin 284: OG pax count 22, sol cancelled  22
+itin 285: OG pax count 3, sol cancelled  3
+itin 286: OG pax count 3, sol cancelled  3
+itin 287: OG pax count 11, sol cancelled  11
+itin 288: OG pax count 24, sol cancelled  24
+itin 289: OG pax count 6, sol cancelled  6
+itin 290: OG pax count 13, sol cancelled  13
+itin 297: OG pax count 45, sol cancelled  45
+itin 298: OG pax count 10, sol cancelled  10
+itin 299: OG pax count 15, sol cancelled  15
+itin 300: OG pax count 4, sol cancelled  4
+itin 303: OG pax count 60, sol cancelled  60
+itin 304: OG pax count 9, sol cancelled  9
+itin 305: OG pax count 7, sol cancelled  7
+itin 306: OG pax count 2, sol cancelled  2
+itin 309: OG pax count 53, sol cancelled  53
+itin 310: OG pax count 8, sol cancelled  8
+itin 311: OG pax count 6, sol cancelled  6
+itin 312: OG pax count 2, sol cancelled  2
+itin 315: OG pax count 92, sol cancelled  62
+itin 315 partially cancelled
+itin 315: OG pax count 92, sol put 30 pax on flight 2866 in cabin E
+itin 316: OG pax count 9, sol cancelled  9
+itin 317: OG pax count 25, sol put 25 pax on flight 2866 in cabin E
+itin 318: OG pax count 7, sol cancelled  7
+itin 322: OG pax count 98, sol cancelled  98
+itin 323: OG pax count 13, sol cancelled  13
+itin 331: OG pax count 68, sol cancelled  68
+itin 332: OG pax count 14, sol cancelled  14
+itin 333: OG pax count 17, sol cancelled  17
+itin 334: OG pax count 4, sol cancelled  4
+itin 339: OG pax count 96, sol put 96 pax on flight 2866 in cabin E
+itin 340: OG pax count 18, sol cancelled  18
+itin 341: OG pax count 19, sol put 19 pax on flight 2866 in cabin E
+itin 342: OG pax count 6, sol cancelled  6
+itin 346: OG pax count 87, sol cancelled  87
+itin 347: OG pax count 32, sol cancelled  32
+itin 348: OG pax count 5, sol cancelled  5
+itin 351: OG pax count 67, sol cancelled  67
+itin 352: OG pax count 8, sol cancelled  8
+itin 353: OG pax count 35, sol put 35 pax on flight 2874 in cabin E
+itin 354: OG pax count 9, sol cancelled  9
+itin 355: OG pax count 59, sol cancelled  59
+itin 356: OG pax count 16, sol cancelled  16
+itin 357: OG pax count 38, sol cancelled  38
+itin 360: OG pax count 62, sol cancelled  62
+itin 361: OG pax count 13, sol cancelled  13
+itin 362: OG pax count 19, sol cancelled  19
+itin 363: OG pax count 5, sol cancelled  5
+itin 371: OG pax count 72, sol cancelled  72
+itin 372: OG pax count 8, sol cancelled  8
+itin 373: OG pax count 30, sol cancelled  3
+itin 373 partially cancelled
+itin 373: OG pax count 30, sol put 27 pax on flight 2874 in cabin E
+itin 374: OG pax count 8, sol cancelled  8
+itin 378: OG pax count 18, sol cancelled  18
+itin 380: OG pax count 6, sol cancelled  6
+itin 382: OG pax count 71, sol cancelled  71
+itin 383: OG pax count 31, sol cancelled  31
+itin 384: OG pax count 53, sol cancelled  53
+itin 385: OG pax count 14, sol cancelled  14
+itin 386: OG pax count 36, sol put 36 pax on flight 2874 in cabin E
+itin 387: OG pax count 8, sol cancelled  8
+itin 389: OG pax count 14, sol cancelled  14
+itin 391: OG pax count 8, sol cancelled  8
+itin 392: OG pax count 91, sol cancelled  91
+itin 393: OG pax count 18, sol cancelled  18
+itin 394: OG pax count 23, sol put 23 pax on flight 2874 in cabin E
+itin 395: OG pax count 6, sol cancelled  6
+itin 397: OG pax count 17, sol cancelled  17
+itin 399: OG pax count 5, sol cancelled  5
+itin 404: OG pax count 87, sol cancelled  87
+itin 405: OG pax count 19, sol cancelled  19
+itin 406: OG pax count 107, sol cancelled  107
+itin 407: OG pax count 18, sol cancelled  18
+itin 408: OG pax count 54, sol cancelled  54
+itin 409: OG pax count 14, sol cancelled  14
+itin 410: OG pax count 29, sol put 29 pax on flight 2874 in cabin E
+itin 411: OG pax count 7, sol cancelled  7
+itin 412: OG pax count 100, sol cancelled  100
+itin 413: OG pax count 18, sol cancelled  18
+itin 414: OG pax count 17, sol put 17 pax on flight 2878 in cabin E
+itin 415: OG pax count 5, sol cancelled  5
+itin 418: OG pax count 88, sol cancelled  88
+itin 419: OG pax count 9, sol cancelled  9
+itin 420: OG pax count 28, sol cancelled  28
+itin 421: OG pax count 4, sol cancelled  4
+itin 424: OG pax count 85, sol cancelled  85
+itin 425: OG pax count 18, sol cancelled  18
+itin 426: OG pax count 27, sol cancelled  27
+itin 427: OG pax count 4, sol cancelled  4
+itin 433: OG pax count 83, sol cancelled  83
+itin 434: OG pax count 18, sol cancelled  18
+itin 435: OG pax count 28, sol cancelled  28
+itin 436: OG pax count 7, sol cancelled  7
+itin 440: OG pax count 83, sol cancelled  83
+itin 441: OG pax count 18, sol cancelled  18
+itin 442: OG pax count 28, sol cancelled  28
+itin 443: OG pax count 7, sol cancelled  7
+itin 453: OG pax count 39, sol cancelled  39
+itin 454: OG pax count 21, sol cancelled  21
+itin 455: OG pax count 24, sol cancelled  24
+itin 456: OG pax count 11, sol cancelled  11
+itin 460: OG pax count 16, sol cancelled  16
+itin 462: OG pax count 3, sol cancelled  3
+itin 472: OG pax count 63, sol cancelled  63
+itin 473: OG pax count 14, sol cancelled  14
+itin 474: OG pax count 21, sol cancelled  21
+itin 475: OG pax count 6, sol cancelled  6
+itin 478: OG pax count 83, sol cancelled  83
+itin 479: OG pax count 29, sol cancelled  29
+itin 480: OG pax count 17, sol cancelled  17
+itin 481: OG pax count 4, sol cancelled  4
+itin 489: OG pax count 90, sol cancelled  90
+itin 490: OG pax count 18, sol cancelled  18
+itin 491: OG pax count 23, sol cancelled  23
+itin 492: OG pax count 3, sol cancelled  3
+itin 497: OG pax count 18, sol cancelled  18
+itin 502: OG pax count 70, sol cancelled  70
+itin 503: OG pax count 44, sol cancelled  44
+itin 512: OG pax count 65, sol cancelled  65
+itin 513: OG pax count 40, sol cancelled  40
+itin 514: OG pax count 17, sol cancelled  17
+itin 515: OG pax count 13, sol cancelled  13
+itin 516: OG pax count 80, sol cancelled  80
+itin 517: OG pax count 19, sol cancelled  19
+itin 518: OG pax count 29, sol cancelled  29
+itin 519: OG pax count 4, sol cancelled  4
+itin 522: OG pax count 16, sol cancelled  16
+itin 524: OG pax count 5, sol cancelled  5
+itin 530: OG pax count 18, sol cancelled  18
+itin 532: OG pax count 8, sol cancelled  8
+itin 533: OG pax count 67, sol cancelled  67
+itin 534: OG pax count 15, sol cancelled  15
+itin 535: OG pax count 21, sol cancelled  21
+itin 536: OG pax count 5, sol cancelled  5
+itin 538: OG pax count 17, sol cancelled  17
+itin 540: OG pax count 6, sol cancelled  6
+itin 542: OG pax count 15, sol cancelled  15
+itin 544: OG pax count 6, sol cancelled  6
+itin 545: OG pax count 78, sol cancelled  78
+itin 546: OG pax count 25, sol cancelled  25
+itin 547: OG pax count 75, sol cancelled  75
+itin 548: OG pax count 8, sol cancelled  8
+itin 549: OG pax count 25, sol cancelled  25
+itin 550: OG pax count 7, sol cancelled  7
+itin 553: OG pax count 45, sol cancelled  45
+itin 554: OG pax count 13, sol cancelled  13
+itin 555: OG pax count 45, sol cancelled  45
+itin 556: OG pax count 9, sol cancelled  9
+itin 559: OG pax count 68, sol cancelled  68
+itin 560: OG pax count 13, sol cancelled  13
+itin 561: OG pax count 15, sol cancelled  15
+itin 562: OG pax count 4, sol cancelled  4
+itin 570: OG pax count 4, sol cancelled  4
+itin 572: OG pax count 1, sol cancelled  1
+itin 573: OG pax count 2, sol cancelled  2
+itin 574: OG pax count 63, sol cancelled  63
+itin 575: OG pax count 13, sol cancelled  13
+itin 576: OG pax count 17, sol cancelled  17
+itin 577: OG pax count 5, sol cancelled  5
+itin 581: OG pax count 79, sol cancelled  79
+itin 582: OG pax count 12, sol cancelled  12
+itin 583: OG pax count 9, sol cancelled  9
+itin 584: OG pax count 3, sol cancelled  3
+itin 589: OG pax count 11, sol cancelled  11
+itin 591: OG pax count 3, sol cancelled  3
+itin 594: OG pax count 49, sol cancelled  49
+itin 595: OG pax count 12, sol cancelled  12
+itin 596: OG pax count 18, sol cancelled  18
+itin 597: OG pax count 11, sol cancelled  11
+itin 601: OG pax count 62, sol cancelled  62
+itin 602: OG pax count 13, sol cancelled  13
+itin 603: OG pax count 18, sol cancelled  18
+itin 604: OG pax count 5, sol cancelled  5
+itin 607: OG pax count 63, sol cancelled  63
+itin 608: OG pax count 13, sol cancelled  13
+itin 609: OG pax count 17, sol cancelled  17
+itin 610: OG pax count 5, sol cancelled  5
+itin 621: OG pax count 67, sol cancelled  67
+itin 622: OG pax count 13, sol cancelled  13
+itin 623: OG pax count 15, sol cancelled  15
+itin 624: OG pax count 4, sol cancelled  4
+itin 633: OG pax count 34, sol cancelled  34
+itin 634: OG pax count 10, sol cancelled  10
+itin 635: OG pax count 10, sol cancelled  10
+itin 636: OG pax count 3, sol cancelled  3
+itin 639: OG pax count 60, sol cancelled  60
+itin 640: OG pax count 23, sol cancelled  23
+itin 642: OG pax count 13, sol cancelled  13
+itin 644: OG pax count 6, sol cancelled  6
+itin 650: OG pax count 3, sol cancelled  3
+itin 652: OG pax count 13, sol cancelled  13
+itin 654: OG pax count 4, sol cancelled  4
+itin 655: OG pax count 79, sol cancelled  79
+itin 656: OG pax count 18, sol cancelled  18
+itin 657: OG pax count 29, sol cancelled  29
+itin 658: OG pax count 8, sol cancelled  8
+itin 660: OG pax count 12, sol cancelled  12
+itin 662: OG pax count 5, sol cancelled  5
+itin 663: OG pax count 69, sol cancelled  69
+itin 664: OG pax count 15, sol cancelled  15
+itin 665: OG pax count 23, sol cancelled  23
+itin 666: OG pax count 6, sol cancelled  6
+itin 677: OG pax count 85, sol cancelled  85
+itin 678: OG pax count 34, sol cancelled  34
+itin 683: OG pax count 69, sol cancelled  69
+itin 684: OG pax count 11, sol cancelled  11
+itin 685: OG pax count 108, sol cancelled  108
+itin 686: OG pax count 15, sol cancelled  15
+itin 687: OG pax count 65, sol cancelled  65
+itin 688: OG pax count 6, sol cancelled  6
+itin 689: OG pax count 50, sol cancelled  50
+itin 690: OG pax count 12, sol cancelled  12
+itin 691: OG pax count 22, sol cancelled  22
+itin 692: OG pax count 2, sol put 2 pax on flight 3135 in cabin E
+itin 693: OG pax count 3, sol put 3 pax on flight 3135 in cabin E
+itin 698: OG pax count 8, sol cancelled  8
+itin 703: OG pax count 52, sol cancelled  52
+itin 704: OG pax count 13, sol cancelled  13
+itin 705: OG pax count 26, sol cancelled  26
+itin 706: OG pax count 3, sol cancelled  3
+itin 715: OG pax count 15, sol cancelled  15
+itin 717: OG pax count 7, sol cancelled  7
+itin 722: OG pax count 15, sol cancelled  15
+itin 724: OG pax count 3, sol cancelled  3
+itin 727: OG pax count 68, sol cancelled  68
+itin 728: OG pax count 29, sol cancelled  29
+itin 732: OG pax count 16, sol cancelled  16
+itin 734: OG pax count 5, sol cancelled  5
+itin 735: OG pax count 58, sol cancelled  58
+itin 736: OG pax count 15, sol cancelled  15
+itin 737: OG pax count 31, sol cancelled  31
+itin 738: OG pax count 7, sol cancelled  7
+itin 741: OG pax count 107, sol cancelled  107
+itin 742: OG pax count 11, sol cancelled  11
+itin 743: OG pax count 32, sol cancelled  25
+itin 743 partially cancelled
+itin 743: OG pax count 32, sol put 7 pax on flight 3144 in cabin E
+itin 744: OG pax count 5, sol cancelled  5
+itin 748: OG pax count 110, sol cancelled  110
+itin 749: OG pax count 22, sol cancelled  22
+itin 750: OG pax count 26, sol cancelled  26
+itin 751: OG pax count 7, sol cancelled  7
+itin 755: OG pax count 17, sol cancelled  17
+itin 757: OG pax count 5, sol cancelled  5
+itin 760: OG pax count 91, sol cancelled  91
+itin 761: OG pax count 9, sol cancelled  9
+itin 762: OG pax count 22, sol put 22 pax on flight 3144 in cabin E
+itin 763: OG pax count 3, sol cancelled  3
+itin 770: OG pax count 107, sol cancelled  107
+itin 771: OG pax count 14, sol cancelled  14
+itin 772: OG pax count 27, sol cancelled  27
+itin 773: OG pax count 10, sol cancelled  10
+itin 783: OG pax count 4, sol cancelled  4
+itin 786: OG pax count 73, sol cancelled  73
+itin 787: OG pax count 7, sol cancelled  7
+itin 788: OG pax count 18, sol cancelled  18
+itin 789: OG pax count 5, sol cancelled  5
+itin 790: OG pax count 93, sol cancelled  68
+itin 790 partially cancelled
+itin 790: OG pax count 93, sol put 25 pax on flight 110 in cabin F
+itin 790: OG pax count 93, sol put 25 pax on flight 4483 in cabin E
+itin 791: OG pax count 26, sol put 26 pax on flight 138 in cabin B
+itin 791: OG pax count 26, sol put 26 pax on flight 4483 in cabin E
+itin 801: OG pax count 28, sol cancelled  28
+itin 809: OG pax count 89, sol cancelled  89
+itin 810: OG pax count 9, sol cancelled  9
+itin 811: OG pax count 27, sol cancelled  27
+itin 813: OG pax count 18, sol cancelled  18
+itin 819: OG pax count 93, sol cancelled  93
+itin 820: OG pax count 20, sol cancelled  20
+itin 821: OG pax count 54, sol cancelled  54
+itin 822: OG pax count 12, sol cancelled  12
+itin 823: OG pax count 20, sol cancelled  20
+itin 824: OG pax count 5, sol cancelled  5
+itin 829: OG pax count 88, sol cancelled  88
+itin 830: OG pax count 9, sol cancelled  9
+itin 831: OG pax count 28, sol cancelled  28
+itin 832: OG pax count 7, sol cancelled  7
+itin 834: OG pax count 14, sol cancelled  14
+itin 836: OG pax count 5, sol cancelled  5
+itin 837: OG pax count 116, sol cancelled  116
+itin 838: OG pax count 10, sol cancelled  10
+itin 839: OG pax count 80, sol cancelled  80
+itin 840: OG pax count 9, sol cancelled  9
+itin 841: OG pax count 34, sol cancelled  18
+itin 841 partially cancelled
+itin 841: OG pax count 34, sol put 16 pax on flight 4194 in cabin E
+itin 842: OG pax count 5, sol cancelled  5
+itin 846: OG pax count 79, sol cancelled  79
+itin 847: OG pax count 38, sol cancelled  38
+itin 848: OG pax count 94, sol cancelled  94
+itin 849: OG pax count 19, sol cancelled  19
+itin 850: OG pax count 94, sol cancelled  94
+itin 851: OG pax count 9, sol cancelled  9
+itin 852: OG pax count 24, sol put 20 pax on flight 4194 in cabin E
+itin 852: OG pax count 24, sol put 4 pax on flight 4202 in cabin E
+itin 853: OG pax count 4, sol cancelled  4
+itin 858: OG pax count 82, sol cancelled  82
+itin 859: OG pax count 25, sol put 25 pax on flight 4203 in cabin E
+itin 866: OG pax count 68, sol cancelled  68
+itin 867: OG pax count 12, sol cancelled  12
+itin 868: OG pax count 36, sol cancelled  36
+itin 869: OG pax count 13, sol cancelled  13
+itin 874: OG pax count 18, sol cancelled  18
+itin 890: OG pax count 73, sol cancelled  73
+itin 891: OG pax count 8, sol cancelled  8
+itin 892: OG pax count 27, sol cancelled  27
+itin 893: OG pax count 4, sol cancelled  4
+itin 894: OG pax count 74, sol cancelled  74
+itin 895: OG pax count 40, sol cancelled  40
+itin 896: OG pax count 122, sol cancelled  122
+itin 897: OG pax count 11, sol cancelled  11
+itin 898: OG pax count 23, sol cancelled  23
+itin 899: OG pax count 4, sol cancelled  4
+itin 903: OG pax count 81, sol cancelled  81
+itin 904: OG pax count 21, sol cancelled  21
+itin 905: OG pax count 48, sol cancelled  48
+itin 906: OG pax count 11, sol cancelled  11
+itin 909: OG pax count 121, sol cancelled  121
+itin 910: OG pax count 21, sol cancelled  21
+itin 911: OG pax count 20, sol cancelled  20
+itin 912: OG pax count 6, sol put 6 pax on flight 4699 in cabin E
+itin 919: OG pax count 89, sol cancelled  89
+itin 920: OG pax count 18, sol cancelled  18
+itin 921: OG pax count 24, sol cancelled  24
+itin 922: OG pax count 6, sol cancelled  1
+itin 922 partially cancelled
+itin 922: OG pax count 6, sol put 5 pax on flight 4699 in cabin E
+itin 925: OG pax count 102, sol cancelled  102
+itin 926: OG pax count 12, sol cancelled  12
+itin 927: OG pax count 33, sol cancelled  33
+itin 928: OG pax count 10, sol cancelled  10
+itin 930: OG pax count 10, sol cancelled  10
+itin 932: OG pax count 3, sol cancelled  3
+itin 933: OG pax count 91, sol cancelled  91
+itin 934: OG pax count 10, sol cancelled  10
+itin 935: OG pax count 35, sol cancelled  35
+itin 936: OG pax count 9, sol cancelled  9
+itin 942: OG pax count 9, sol cancelled  9
+itin 944: OG pax count 22, sol cancelled  22
+itin 946: OG pax count 8, sol cancelled  8
+itin 949: OG pax count 59, sol cancelled  59
+itin 950: OG pax count 19, sol cancelled  19
+itin 951: OG pax count 14, sol cancelled  14
+itin 952: OG pax count 3, sol cancelled  3
+itin 954: OG pax count 63, sol cancelled  63
+itin 955: OG pax count 7, sol cancelled  7
+itin 956: OG pax count 20, sol cancelled  20
+itin 957: OG pax count 5, sol cancelled  5
+itin 958: OG pax count 74, sol cancelled  74
+itin 959: OG pax count 22, sol cancelled  22
+itin 961: OG pax count 8, sol cancelled  8
+itin 967: OG pax count 96, sol cancelled  96
+itin 968: OG pax count 26, sol cancelled  26
+itin 969: OG pax count 96, sol cancelled  96
+itin 970: OG pax count 14, sol cancelled  14
+itin 979: OG pax count 82, sol cancelled  82
+itin 980: OG pax count 15, sol cancelled  15
+itin 981: OG pax count 14, sol cancelled  14
+itin 982: OG pax count 4, sol cancelled  4
+itin 985: OG pax count 31, sol cancelled  31
+itin 986: OG pax count 12, sol cancelled  12
+itin 988: OG pax count 5, sol cancelled  5
+itin 990: OG pax count 1, sol cancelled  1
+itin 991: OG pax count 26, sol cancelled  26
+itin 992: OG pax count 5, sol cancelled  5
+itin 993: OG pax count 7, sol cancelled  7
+itin 994: OG pax count 2, sol cancelled  2
+itin 997: OG pax count 80, sol cancelled  80
+itin 998: OG pax count 68, sol cancelled  68
+itin 1016: OG pax count 68, sol cancelled  68
+itin 1017: OG pax count 18, sol cancelled  18
+itin 1018: OG pax count 40, sol cancelled  40
+itin 1019: OG pax count 9, sol cancelled  9
+itin 1020: OG pax count 41, sol cancelled  41
+itin 1021: OG pax count 4, sol cancelled  4
+itin 1022: OG pax count 28, sol cancelled  28
+itin 1023: OG pax count 5, sol cancelled  5
+itin 1024: OG pax count 6, sol cancelled  6
+itin 1025: OG pax count 2, sol cancelled  2
+itin 1026: OG pax count 105, sol cancelled  105
+itin 1027: OG pax count 42, sol cancelled  42
+itin 1036: OG pax count 28, sol cancelled  28
+itin 1037: OG pax count 11, sol cancelled  11
+itin 1041: OG pax count 8, sol cancelled  8
+itin 1043: OG pax count 3, sol cancelled  3
+itin 1044: OG pax count 82, sol cancelled  82
+itin 1045: OG pax count 15, sol cancelled  15
+itin 1048: OG pax count 73, sol cancelled  73
+itin 1049: OG pax count 15, sol cancelled  15
+itin 1050: OG pax count 20, sol cancelled  20
+itin 1051: OG pax count 5, sol cancelled  5
+itin 1055: OG pax count 93, sol cancelled  93
+itin 1056: OG pax count 24, sol cancelled  24
+itin 1057: OG pax count 70, sol cancelled  70
+itin 1058: OG pax count 15, sol cancelled  15
+itin 1059: OG pax count 22, sol cancelled  22
+itin 1060: OG pax count 6, sol cancelled  6
+itin 1062: OG pax count 15, sol cancelled  15
+itin 1068: OG pax count 6, sol cancelled  6
+itin 1070: OG pax count 3, sol cancelled  3
+itin 1071: OG pax count 104, sol cancelled  104
+itin 1072: OG pax count 11, sol cancelled  11
+itin 1073: OG pax count 97, sol cancelled  97
+itin 1074: OG pax count 26, sol cancelled  26
+itin 1077: OG pax count 72, sol cancelled  72
+itin 1078: OG pax count 15, sol cancelled  15
+itin 1079: OG pax count 21, sol cancelled  21
+itin 1080: OG pax count 5, sol cancelled  5
+itin 1086: OG pax count 67, sol cancelled  67
+itin 1087: OG pax count 10, sol cancelled  10
+itin 1088: OG pax count 26, sol cancelled  26
+itin 1089: OG pax count 4, sol cancelled  4
+itin 1104: OG pax count 23, sol cancelled  23
+itin 1105: OG pax count 5, sol cancelled  5
+itin 1106: OG pax count 9, sol cancelled  9
+itin 1107: OG pax count 2, sol cancelled  2
+itin 1109: OG pax count 5, sol cancelled  5
+itin 1111: OG pax count 2, sol cancelled  2
+itin 1112: OG pax count 53, sol cancelled  53
+itin 1113: OG pax count 7, sol cancelled  7
+itin 1114: OG pax count 39, sol put 39 pax on flight 4544 in cabin E
+itin 1114: OG pax count 39, sol put 39 pax on flight 72 in cabin F
+itin 1115: OG pax count 9, sol cancelled  9
+itin 1119: OG pax count 69, sol cancelled  69
+itin 1120: OG pax count 8, sol cancelled  8
+itin 1121: OG pax count 26, sol cancelled  26
+itin 1124: OG pax count 90, sol cancelled  90
+itin 1125: OG pax count 11, sol cancelled  11
+itin 1126: OG pax count 45, sol cancelled  45
+itin 1127: OG pax count 6, sol cancelled  6
+itin 1133: OG pax count 15, sol cancelled  15
+itin 1135: OG pax count 6, sol cancelled  6
+itin 1138: OG pax count 88, sol cancelled  88
+itin 1139: OG pax count 67, sol cancelled  8
+itin 1139 partially cancelled
+itin 1139: OG pax count 67, sol put 1 pax on flight 4413 in cabin E
+itin 1139: OG pax count 67, sol put 58 pax on flight 4407 in cabin E
+itin 1140: OG pax count 79, sol cancelled  79
+itin 1141: OG pax count 20, sol cancelled  20
+itin 1142: OG pax count 46, sol cancelled  40
+itin 1142 partially cancelled
+itin 1142: OG pax count 46, sol put 6 pax on flight 4410 in cabin E
+itin 1143: OG pax count 11, sol cancelled  11
+itin 1144: OG pax count 96, sol cancelled  96
+itin 1145: OG pax count 25, sol put 25 pax on flight 4413 in cabin E
+itin 1149: OG pax count 5, sol cancelled  5
+itin 1150: OG pax count 147, sol cancelled  147
+itin 1151: OG pax count 32, sol put 32 pax on flight 4413 in cabin E
+itin 1152: OG pax count 107, sol cancelled  107
+itin 1153: OG pax count 35, sol put 35 pax on flight 4410 in cabin E
+itin 1154: OG pax count 5, sol cancelled  5
+itin 1157: OG pax count 108, sol cancelled  108
+itin 1158: OG pax count 17, sol put 17 pax on flight 4410 in cabin E
+itin 1161: OG pax count 107, sol cancelled  103
+itin 1161 partially cancelled
+itin 1161: OG pax count 107, sol put 4 pax on flight 4436 in cabin E
+itin 1162: OG pax count 15, sol put 15 pax on flight 4436 in cabin E
+itin 1163: OG pax count 65, sol cancelled  65
+itin 1164: OG pax count 13, sol cancelled  13
+itin 1165: OG pax count 17, sol put 17 pax on flight 4435 in cabin E
+itin 1166: OG pax count 8, sol cancelled  8
+itin 1167: OG pax count 110, sol cancelled  110
+itin 1168: OG pax count 13, sol cancelled  13
+itin 1169: OG pax count 86, sol cancelled  86
+itin 1170: OG pax count 9, sol cancelled  9
+itin 1171: OG pax count 29, sol put 29 pax on flight 4435 in cabin E
+itin 1172: OG pax count 8, sol cancelled  8
+itin 1181: OG pax count 124, sol cancelled  120
+itin 1181 partially cancelled
+itin 1181: OG pax count 124, sol put 4 pax on flight 4475 in cabin E
+itin 1182: OG pax count 26, sol put 26 pax on flight 4475 in cabin E
+itin 1183: OG pax count 85, sol cancelled  85
+itin 1184: OG pax count 9, sol cancelled  9
+itin 1185: OG pax count 31, sol cancelled  1
+itin 1185 partially cancelled
+itin 1185: OG pax count 31, sol put 30 pax on flight 4476 in cabin E
+itin 1186: OG pax count 4, sol cancelled  4
+itin 1188: OG pax count 15, sol cancelled  15
+itin 1190: OG pax count 7, sol cancelled  7
+itin 1191: OG pax count 59, sol cancelled  59
+itin 1192: OG pax count 15, sol cancelled  15
+itin 1193: OG pax count 30, sol cancelled  30
+itin 1194: OG pax count 7, sol cancelled  7
+itin 1195: OG pax count 66, sol cancelled  66
+itin 1196: OG pax count 36, sol cancelled  36
+itin 1197: OG pax count 17, sol put 9 pax on flight 3144 in cabin E
+itin 1197: OG pax count 17, sol put 8 pax on flight 4488 in cabin E
+itin 1197: OG pax count 17, sol put 9 pax on flight 144 in cabin F
+itin 1198: OG pax count 6, sol cancelled  6
+itin 1199: OG pax count 81, sol cancelled  81
+itin 1200: OG pax count 14, sol cancelled  14
+itin 1201: OG pax count 13, sol cancelled  13
+itin 1202: OG pax count 4, sol cancelled  4
+itin 1203: OG pax count 64, sol cancelled  64
+itin 1204: OG pax count 23, sol cancelled  23
+itin 1205: OG pax count 15, sol put 15 pax on flight 4488 in cabin E
+itin 1206: OG pax count 4, sol cancelled  4
+itin 1207: OG pax count 82, sol cancelled  82
+itin 1208: OG pax count 30, sol cancelled  28
+itin 1208 partially cancelled
+itin 1208: OG pax count 30, sol put 2 pax on flight 41 in cabin E
+itin 1208: OG pax count 30, sol put 2 pax on flight 3135 in cabin E
+itin 1209: OG pax count 82, sol cancelled  82
+itin 1210: OG pax count 9, sol cancelled  9
+itin 1211: OG pax count 28, sol put 28 pax on flight 4488 in cabin E
+itin 1212: OG pax count 4, sol cancelled  4
+itin 1213: OG pax count 68, sol cancelled  68
+itin 1214: OG pax count 15, sol cancelled  15
+itin 1215: OG pax count 21, sol cancelled  21
+itin 1216: OG pax count 6, sol cancelled  6
+itin 1217: OG pax count 68, sol cancelled  68
+itin 1218: OG pax count 13, sol cancelled  13
+itin 1219: OG pax count 14, sol cancelled  14
+itin 1220: OG pax count 4, sol cancelled  4
+itin 1227: OG pax count 5, sol cancelled  5
+itin 1229: OG pax count 2, sol cancelled  2
+itin 1230: OG pax count 13, sol cancelled  13
+itin 1231: OG pax count 3, sol put 3 pax on flight 61 in cabin F
+itin 1231: OG pax count 3, sol put 1 pax on flight 3099 in cabin E
+itin 1231: OG pax count 3, sol put 2 pax on flight 3067 in cabin E
+itin 1232: OG pax count 13, sol cancelled  13
+itin 1233: OG pax count 3, sol cancelled  3
+itin 1234: OG pax count 5, sol cancelled  5
+itin 1235: OG pax count 1, sol put 1 pax on flight 41 in cabin B
+itin 1235: OG pax count 1, sol put 1 pax on flight 3067 in cabin E
+itin 1236: OG pax count 5, sol cancelled  5
+itin 1237: OG pax count 1, sol cancelled  1
+itin 1244: OG pax count 64, sol cancelled  64
+itin 1245: OG pax count 13, sol cancelled  13
+itin 1246: OG pax count 17, sol cancelled  17
+itin 1247: OG pax count 5, sol cancelled  5
+itin 1252: OG pax count 80, sol cancelled  80
+itin 1253: OG pax count 12, sol cancelled  12
+itin 1254: OG pax count 8, sol cancelled  8
+itin 1255: OG pax count 3, sol cancelled  3
+itin 1257: OG pax count 13, sol cancelled  13
+itin 1259: OG pax count 6, sol put 6 pax on flight 41 in cabin E
+itin 1259: OG pax count 6, sol put 6 pax on flight 3135 in cabin E
+itin 1260: OG pax count 54, sol cancelled  54
+itin 1261: OG pax count 5, sol cancelled  5
+itin 1262: OG pax count 13, sol cancelled  13
+itin 1263: OG pax count 2, sol cancelled  2
+itin 1265: OG pax count 6, sol put 6 pax on flight 41 in cabin B
+itin 1265: OG pax count 6, sol put 6 pax on flight 3135 in cabin E
+itin 1267: OG pax count 12, sol cancelled  12
+itin 1269: OG pax count 2, sol put 2 pax on flight 60 in cabin F
+itin 1269: OG pax count 2, sol put 2 pax on flight 3135 in cabin E
+itin 1271: OG pax count 3, sol put 3 pax on flight 53 in cabin F
+itin 1271: OG pax count 3, sol put 3 pax on flight 3135 in cabin E
+itin 1272: OG pax count 15, sol cancelled  15
+itin 1273: OG pax count 3, sol cancelled  3
+itin 1274: OG pax count 28, sol cancelled  28
+itin 1275: OG pax count 2, sol cancelled  2
+itin 1276: OG pax count 3, sol cancelled  3
+itin 1277: OG pax count 3, sol cancelled  3
+itin 1278: OG pax count 1, sol cancelled  1
+itin 1279: OG pax count 5, sol cancelled  5
+itin 1280: OG pax count 1, sol cancelled  1
+itin 1282: OG pax count 12, sol cancelled  12
+itin 1284: OG pax count 5, sol cancelled  5
+itin 1285: OG pax count 51, sol cancelled  51
+itin 1286: OG pax count 6, sol cancelled  6
+itin 1292: OG pax count 3, sol cancelled  3
+itin 1294: OG pax count 5, sol cancelled  5
+itin 1296: OG pax count 1, sol cancelled  1
+itin 1298: OG pax count 2, sol cancelled  2
+itin 1306: OG pax count 72, sol cancelled  72
+itin 1307: OG pax count 16, sol cancelled  16
+itin 1308: OG pax count 5, sol cancelled  5
+itin 1312: OG pax count 3, sol cancelled  3
+itin 1314: OG pax count 6, sol cancelled  6
+itin 1316: OG pax count 1, sol cancelled  1
+itin 1318: OG pax count 2, sol cancelled  2
+itin 1324: OG pax count 20, sol cancelled  20
+itin 1325: OG pax count 8, sol cancelled  8
+itin 1326: OG pax count 7, sol cancelled  7
+itin 1327: OG pax count 3, sol cancelled  3
+itin 1328: OG pax count 42, sol cancelled  42
+itin 1329: OG pax count 21, sol cancelled  21
+itin 1330: OG pax count 15, sol cancelled  15
+itin 1331: OG pax count 8, sol cancelled  8
+itin 1335: OG pax count 4, sol cancelled  4
+itin 1337: OG pax count 5, sol cancelled  5
+itin 1339: OG pax count 2, sol cancelled  2
+itin 1340: OG pax count 71, sol cancelled  71
+itin 1341: OG pax count 15, sol cancelled  15
+itin 1342: OG pax count 19, sol cancelled  19
+itin 1343: OG pax count 5, sol cancelled  5
+itin 1375: OG pax count 61, sol cancelled  61
+itin 1376: OG pax count 18, sol cancelled  18
+itin 1377: OG pax count 29, sol put 23 pax on flight 2878 in cabin E
+itin 1377: OG pax count 29, sol put 6 pax on flight 2874 in cabin E
+itin 1377: OG pax count 29, sol put 29 pax on flight 144 in cabin F
+itin 1378: OG pax count 16, sol cancelled  16
+itin 1380: OG pax count 37, sol cancelled  37
+itin 1382: OG pax count 13, sol put 13 pax on flight 39 in cabin B
+itin 1382: OG pax count 13, sol put 13 pax on flight 4617 in cabin E
+itin 1383: OG pax count 85, sol cancelled  85
+itin 1384: OG pax count 14, sol cancelled  14
+itin 1385: OG pax count 10, sol put 10 pax on flight 2874 in cabin E
+itin 1385: OG pax count 10, sol put 10 pax on flight 144 in cabin F
+itin 1386: OG pax count 3, sol cancelled  3
+itin 1387: OG pax count 102, sol cancelled  102
+itin 1388: OG pax count 12, sol cancelled  12
+itin 1389: OG pax count 6, sol cancelled  6
+itin 1390: OG pax count 29, sol cancelled  29
+itin 1391: OG pax count 1, sol cancelled  1
+itin 1392: OG pax count 7, sol cancelled  7
+itin 1396: OG pax count 18, sol cancelled  18
+itin 1398: OG pax count 7, sol cancelled  7
+itin 1401: OG pax count 37, sol cancelled  28
+itin 1401 partially cancelled
+itin 1401: OG pax count 37, sol put 9 pax on flight 4547 in cabin E
+itin 1402: OG pax count 15, sol put 15 pax on flight 4547 in cabin E
+itin 1403: OG pax count 56, sol cancelled  56
+itin 1404: OG pax count 15, sol cancelled  15
+itin 1405: OG pax count 18, sol cancelled  11
+itin 1405 partially cancelled
+itin 1405: OG pax count 18, sol put 7 pax on flight 4544 in cabin E
+itin 1406: OG pax count 12, sol cancelled  12
+itin 1411: OG pax count 6, sol cancelled  6
+itin 1420: OG pax count 95, sol cancelled  95
+itin 1421: OG pax count 22, sol put 22 pax on flight 4547 in cabin E
+itin 1429: OG pax count 20, sol cancelled  20
+itin 1431: OG pax count 12, sol cancelled  12
+itin 1434: OG pax count 72, sol cancelled  72
+itin 1435: OG pax count 29, sol cancelled  29
+itin 1436: OG pax count 21, sol cancelled  21
+itin 1437: OG pax count 5, sol cancelled  5
+itin 1440: OG pax count 72, sol cancelled  72
+itin 1441: OG pax count 8, sol put 8 pax on flight 71 in cabin B
+itin 1441: OG pax count 8, sol put 8 pax on flight 3135 in cabin E
+itin 1442: OG pax count 9, sol cancelled  9
+itin 1443: OG pax count 33, sol cancelled  3
+itin 1443 partially cancelled
+itin 1443: OG pax count 33, sol put 30 pax on flight 38 in cabin E
+itin 1443: OG pax count 33, sol put 30 pax on flight 3067 in cabin E
+itin 1444: OG pax count 4, sol put 4 pax on flight 49 in cabin F
+itin 1444: OG pax count 4, sol put 4 pax on flight 3135 in cabin E
+itin 1445: OG pax count 4, sol put 4 pax on flight 41 in cabin E
+itin 1445: OG pax count 4, sol put 4 pax on flight 3135 in cabin E
+itin 1452: OG pax count 78, sol cancelled  78
+itin 1453: OG pax count 20, sol cancelled  20
+itin 1454: OG pax count 41, sol cancelled  41
+itin 1455: OG pax count 5, sol cancelled  5
+itin 1456: OG pax count 77, sol cancelled  77
+itin 1457: OG pax count 26, sol put 26 pax on flight 41 in cabin F
+itin 1457: OG pax count 26, sol put 26 pax on flight 3099 in cabin E
+itin 1458: OG pax count 7, sol cancelled  7
+itin 1464: OG pax count 9, sol put 9 pax on flight 4700 in cabin E
+itin 1466: OG pax count 4, sol put 4 pax on flight 4700 in cabin E
+itin 1471: OG pax count 78, sol cancelled  78
+itin 1472: OG pax count 22, sol cancelled  22
+itin 1473: OG pax count 23, sol cancelled  23
+itin 1474: OG pax count 8, sol cancelled  8
+itin 1483: OG pax count 3, sol cancelled  3
+itin 1484: OG pax count 63, sol cancelled  63
+itin 1485: OG pax count 16, sol cancelled  16
+itin 1486: OG pax count 31, sol cancelled  31
+itin 1487: OG pax count 4, sol cancelled  4
+itin 1490: OG pax count 78, sol cancelled  78
+itin 1491: OG pax count 12, sol cancelled  12
+itin 1492: OG pax count 26, sol cancelled  26
+itin 1493: OG pax count 9, sol cancelled  9
+itin 1500: OG pax count 3, sol cancelled  3
+itin 1507: OG pax count 17, sol cancelled  17
+itin 1509: OG pax count 4, sol cancelled  4
+itin 1518: OG pax count 85, sol cancelled  85
+itin 1519: OG pax count 29, sol cancelled  29
+itin 1520: OG pax count 56, sol cancelled  56
+itin 1521: OG pax count 5, sol cancelled  5
+itin 1522: OG pax count 6, sol cancelled  6
+itin 1523: OG pax count 11, sol cancelled  11
+itin 1524: OG pax count 1, sol cancelled  1
+itin 1525: OG pax count 2, sol cancelled  2
+itin 1530: OG pax count 2, sol cancelled  2
+itin 1531: OG pax count 1, sol cancelled  1
+itin 1532: OG pax count 24, sol cancelled  24
+itin 1533: OG pax count 9, sol cancelled  9
+itin 1534: OG pax count 1, sol cancelled  1
+itin 1535: OG pax count 5, sol cancelled  5
+itin 1536: OG pax count 3, sol cancelled  3
+itin 1537: OG pax count 13, sol cancelled  13
+itin 1538: OG pax count 3, sol put 3 pax on flight 33 in cabin F
+itin 1538: OG pax count 3, sol put 3 pax on flight 3099 in cabin E
+itin 1539: OG pax count 15, sol cancelled  15
+itin 1540: OG pax count 4, sol cancelled  4
+itin 1541: OG pax count 6, sol cancelled  6
+itin 1543: OG pax count 2, sol cancelled  2
+itin 1547: OG pax count 1, sol cancelled  1
+itin 1549: OG pax count 1, sol put 1 pax on flight 2653 in cabin E
+itin 1550: OG pax count 2, sol put 2 pax on flight 2653 in cabin E
+itin 1557: OG pax count 13, sol cancelled  13
+itin 1558: OG pax count 24, sol cancelled  24
+itin 1559: OG pax count 5, sol cancelled  5
+itin 1560: OG pax count 9, sol cancelled  9
+itin 1561: OG pax count 11, sol cancelled  11
+itin 1562: OG pax count 3, sol cancelled  3
+itin 1563: OG pax count 20, sol cancelled  20
+itin 1564: OG pax count 5, sol cancelled  5
+itin 1565: OG pax count 6, sol cancelled  6
+itin 1566: OG pax count 2, sol cancelled  2
+itin 1567: OG pax count 12, sol cancelled  12
+itin 1568: OG pax count 3, sol cancelled  3
+itin 1569: OG pax count 86, sol cancelled  86
+itin 1570: OG pax count 21, sol cancelled  4
+itin 1570 partially cancelled
+itin 1570: OG pax count 21, sol put 17 pax on flight 4617 in cabin E
+itin 1574: OG pax count 3, sol cancelled  3
+itin 1575: OG pax count 56, sol cancelled  53
+itin 1575 partially cancelled
+itin 1575: OG pax count 56, sol put 3 pax on flight 4619 in cabin E
+itin 1576: OG pax count 7, sol cancelled  7
+itin 1577: OG pax count 27, sol put 27 pax on flight 4619 in cabin E
+itin 1578: OG pax count 3, sol cancelled  3
+itin 1579: OG pax count 19, sol cancelled  19
+itin 1580: OG pax count 6, sol cancelled  6
+itin 1581: OG pax count 55, sol cancelled  55
+itin 1582: OG pax count 13, sol cancelled  13
+itin 1583: OG pax count 39, sol cancelled  39
+itin 1584: OG pax count 8, sol cancelled  8
+itin 1587: OG pax count 63, sol cancelled  63
+itin 1588: OG pax count 10, sol cancelled  10
+itin 1589: OG pax count 7, sol cancelled  7
+itin 1590: OG pax count 1, sol cancelled  1
+itin 1591: OG pax count 1, sol cancelled  1
+itin 1592: OG pax count 71, sol cancelled  71
+itin 1593: OG pax count 53, sol cancelled  53
+itin 1602: OG pax count 48, sol cancelled  48
+itin 1603: OG pax count 15, sol cancelled  15
+itin 1604: OG pax count 12, sol cancelled  12
+itin 1605: OG pax count 5, sol cancelled  5
+itin 1608: OG pax count 104, sol cancelled  104
+itin 1609: OG pax count 16, sol cancelled  16
+itin 1610: OG pax count 12, sol cancelled  12
+itin 1611: OG pax count 4, sol cancelled  4
+itin 1612: OG pax count 85, sol cancelled  85
+itin 1613: OG pax count 3, sol cancelled  3
+itin 1614: OG pax count 81, sol cancelled  81
+itin 1615: OG pax count 9, sol cancelled  9
+itin 1616: OG pax count 30, sol cancelled  30
+itin 1617: OG pax count 4, sol cancelled  4
+itin 1618: OG pax count 55, sol cancelled  55
+itin 1619: OG pax count 11, sol cancelled  11
+itin 1620: OG pax count 11, sol cancelled  11
+itin 1621: OG pax count 3, sol cancelled  3
+itin 1627: OG pax count 49, sol cancelled  49
+itin 1628: OG pax count 11, sol cancelled  11
+itin 1629: OG pax count 15, sol cancelled  15
+itin 1630: OG pax count 4, sol cancelled  4
+itin 1635: OG pax count 35, sol cancelled  35
+itin 1636: OG pax count 3, sol cancelled  3
+itin 1640: OG pax count 15, sol cancelled  15
+itin 1642: OG pax count 5, sol cancelled  5
+itin 1645: OG pax count 72, sol cancelled  72
+itin 1646: OG pax count 24, sol cancelled  24
+itin 1649: OG pax count 113, sol cancelled  113
+itin 1650: OG pax count 29, sol cancelled  29
+itin 1651: OG pax count 54, sol cancelled  54
+itin 1652: OG pax count 14, sol cancelled  14
+itin 1653: OG pax count 21, sol cancelled  21
+itin 1654: OG pax count 6, sol cancelled  6
+itin 1655: OG pax count 12, sol cancelled  12
+itin 1662: OG pax count 108, sol cancelled  108
+itin 1663: OG pax count 39, sol cancelled  39
+itin 1664: OG pax count 5, sol cancelled  5
+itin 1667: OG pax count 67, sol cancelled  67
+itin 1668: OG pax count 29, sol cancelled  29
+itin 1673: OG pax count 44, sol cancelled  44
+itin 1674: OG pax count 12, sol cancelled  12
+itin 1675: OG pax count 29, sol cancelled  29
+itin 1676: OG pax count 15, sol cancelled  15
+itin 1680: OG pax count 22, sol cancelled  22
+itin 1682: OG pax count 8, sol cancelled  8
+itin 1683: OG pax count 105, sol cancelled  105
+itin 1684: OG pax count 22, sol cancelled  22
+itin 1685: OG pax count 29, sol cancelled  29
+itin 1686: OG pax count 8, sol cancelled  8
+itin 1690: OG pax count 5, sol cancelled  5
+itin 1692: OG pax count 2, sol cancelled  2
+itin 1693: OG pax count 120, sol cancelled  120
+itin 1694: OG pax count 24, sol cancelled  24
+itin 1695: OG pax count 38, sol cancelled  38
+itin 1696: OG pax count 13, sol cancelled  13
+itin 1697: OG pax count 16, sol cancelled  16
+itin 1698: OG pax count 5, sol cancelled  5
+itin 1699: OG pax count 63, sol cancelled  63
+itin 1700: OG pax count 7, sol cancelled  7
+itin 1701: OG pax count 20, sol cancelled  20
+itin 1702: OG pax count 3, sol cancelled  3
+itin 1711: OG pax count 11, sol cancelled  11
+itin 1712: OG pax count 2, sol put 2 pax on flight 4699 in cabin E
+itin 1713: OG pax count 3, sol put 3 pax on flight 4699 in cabin E
+itin 1714: OG pax count 21, sol cancelled  21
+itin 1715: OG pax count 4, sol put 4 pax on flight 4699 in cabin E
+itin 1716: OG pax count 4, sol cancelled  4
+itin 1717: OG pax count 4, sol cancelled  4
+itin 1718: OG pax count 1, sol put 1 pax on flight 4699 in cabin E
+itin 1719: OG pax count 1, sol put 1 pax on flight 4699 in cabin E
+itin 1720: OG pax count 7, sol cancelled  7
+itin 1721: OG pax count 2, sol put 2 pax on flight 4699 in cabin E
+itin 1722: OG pax count 2, sol put 2 pax on flight 4699 in cabin E
+itin 1723: OG pax count 76, sol cancelled  76
+itin 1724: OG pax count 12, sol cancelled  12
+itin 1725: OG pax count 48, sol cancelled  31
+itin 1725 partially cancelled
+itin 1725: OG pax count 48, sol put 17 pax on flight 4679 in cabin E
+itin 1726: OG pax count 11, sol cancelled  11
+itin 1727: OG pax count 16, sol put 16 pax on flight 4679 in cabin E
+itin 1728: OG pax count 4, sol cancelled  4
+itin 1730: OG pax count 3, sol put 3 pax on flight 2658 in cabin E
+itin 1732: OG pax count 3, sol cancelled  3
+itin 1734: OG pax count 1, sol put 1 pax on flight 2658 in cabin E
+itin 1736: OG pax count 2, sol put 2 pax on flight 2866 in cabin E
+itin 1737: OG pax count 13, sol cancelled  13
+itin 1738: OG pax count 3, sol cancelled  3
+itin 1739: OG pax count 24, sol cancelled  24
+itin 1740: OG pax count 5, sol cancelled  5
+itin 1741: OG pax count 5, sol cancelled  5
+itin 1742: OG pax count 1, sol cancelled  1
+itin 1743: OG pax count 9, sol cancelled  9
+itin 1744: OG pax count 2, sol cancelled  2
+itin 1745: OG pax count 24, sol cancelled  24
+itin 1746: OG pax count 5, sol cancelled  5
+itin 1747: OG pax count 8, sol cancelled  8
+itin 1748: OG pax count 2, sol cancelled  2
+itin 1749: OG pax count 22, sol cancelled  2
+itin 1749 partially cancelled
+itin 1749: OG pax count 22, sol put 4 pax on flight 4700 in cabin E
+itin 1749: OG pax count 22, sol put 16 pax on flight 4694 in cabin E
+itin 1750: OG pax count 5, sol cancelled  5
+itin 1751: OG pax count 10, sol put 10 pax on flight 4694 in cabin E
+itin 1752: OG pax count 2, sol cancelled  2
+itin 1753: OG pax count 25, sol cancelled  25
+itin 1754: OG pax count 3, sol cancelled  3
+itin 1755: OG pax count 9, sol cancelled  9
+itin 1756: OG pax count 1, sol cancelled  1
+itin 1763: OG pax count 22, sol cancelled  22
+itin 1765: OG pax count 7, sol cancelled  7
+itin 1767: OG pax count 18, sol cancelled  18
+itin 1769: OG pax count 6, sol cancelled  6
+itin 1770: OG pax count 9, sol cancelled  9
+itin 1771: OG pax count 2, sol cancelled  2
+itin 1772: OG pax count 3, sol cancelled  3
+itin 1773: OG pax count 1, sol cancelled  1
+itin 1775: OG pax count 9, sol cancelled  9
+itin 1778: OG pax count 92, sol cancelled  92
+itin 1779: OG pax count 17, sol cancelled  17
+itin 1780: OG pax count 19, sol cancelled  19
+itin 1781: OG pax count 5, sol cancelled  5
+itin 1782: OG pax count 86, sol cancelled  86
+itin 1783: OG pax count 18, sol cancelled  18
+itin 1784: OG pax count 22, sol cancelled  22
+itin 1785: OG pax count 6, sol cancelled  6
+itin 1797: OG pax count 14, sol cancelled  14
+itin 1799: OG pax count 7, sol cancelled  7
+itin 1801: OG pax count 7, sol cancelled  7
+itin 1803: OG pax count 2, sol put 2 pax on flight 3144 in cabin E
+itin 1805: OG pax count 1, sol cancelled  1
+itin 1807: OG pax count 4, sol cancelled  4
+itin 1810: OG pax count 1, sol cancelled  1
+itin 1811: OG pax count 37, sol cancelled  12
+itin 1811 partially cancelled
+itin 1811: OG pax count 37, sol put 25 pax on flight 4784 in cabin E
+itin 1812: OG pax count 7, sol put 7 pax on flight 4700 in cabin E
+itin 1813: OG pax count 8, sol put 8 pax on flight 4784 in cabin E
+itin 1814: OG pax count 2, sol put 2 pax on flight 4700 in cabin E
+itin 1815: OG pax count 9, sol cancelled  9
+itin 1816: OG pax count 2, sol cancelled  2
+itin 1817: OG pax count 20, sol cancelled  20
+itin 1818: OG pax count 4, sol cancelled  4
+itin 1819: OG pax count 3, sol cancelled  3
+itin 1820: OG pax count 1, sol cancelled  1
+itin 1821: OG pax count 7, sol cancelled  7
+itin 1822: OG pax count 2, sol cancelled  2
+itin 1823: OG pax count 45, sol cancelled  45
+itin 1824: OG pax count 11, sol cancelled  11
+itin 1825: OG pax count 19, sol cancelled  19
+itin 1826: OG pax count 5, sol cancelled  5
+itin 1828: OG pax count 11, sol cancelled  11
+itin 1831: OG pax count 14, sol cancelled  14
+itin 1832: OG pax count 9, sol cancelled  9
+itin 1833: OG pax count 10, sol cancelled  10
+itin 1834: OG pax count 5, sol cancelled  5
+itin 1835: OG pax count 9, sol cancelled  9
+itin 1836: OG pax count 2, sol cancelled  2
+itin 1837: OG pax count 4, sol cancelled  4
+itin 1838: OG pax count 1, sol cancelled  1
+itin 1839: OG pax count 28, sol cancelled  28
+itin 1840: OG pax count 7, sol cancelled  7
+itin 1841: OG pax count 17, sol cancelled  17
+itin 1842: OG pax count 4, sol cancelled  4
+itin 1846: OG pax count 8, sol cancelled  8
+itin 1848: OG pax count 2, sol cancelled  2
+itin 1849: OG pax count 3, sol cancelled  3
+itin 1850: OG pax count 1, sol cancelled  1
+itin 1851: OG pax count 1, sol cancelled  1
+itin 1853: OG pax count 4, sol cancelled  4
+itin 1855: OG pax count 3, sol cancelled  3
+itin 1858: OG pax count 39, sol cancelled  39
+itin 1859: OG pax count 19, sol cancelled  19
+itin 1868: OG pax count 3, sol cancelled  3
+itin 1869: OG pax count 1, sol cancelled  1
+itin 1870: OG pax count 1, sol cancelled  1
+itin 1871: OG pax count 33, sol cancelled  33
+itin 1872: OG pax count 10, sol cancelled  10

@@ -35,13 +35,67 @@ all_dataFiles = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/*'))
 # 10 A instances
 files_Ainstances = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/A_instances/*'))
 #10 B instances
-files_Binstances = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/A_instances/*'))
+files_Binstances = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/B_instances/*'))
 # 12 X instances
-files_Xinstances = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/A_instances/*'))
+files_Xinstances = sorted(glob.glob(parent_dir+'/DATA_ROADEF2009/X_instances/*'))
 
-# first A dataset
-currentDir = files_Ainstances[2]
+# # # first A dataset
+# currentDir = files_Ainstances[0]
 
+# defaultDate = '07/01/06'
+
+# # Disruption window and recovery time
+# # This is present in config.csv
+# disrupDate = date(2006,1,7)
+# disrupTime = time(12,0)
+# disrupStartTime = datetime.combine(disrupDate,disrupTime)
+# # The above stores date and time for disruption beginning, as a datetime object
+
+# # Also present in config.csv
+# recovEndDate = date(2006,1,8)
+# recovEndTime = time(4,0)
+# recovByTime = datetime.combine(recovEndDate,recovEndTime)
+# # stores the end of the recovery window
+# # hard deadline for pax to get to their destinations
+
+
+# # first B dataset
+# currentDir = files_Binstances[4]
+
+# defaultDate = '01/03/08'
+
+# # Disruption window and recovery time
+# # This is present in config.csv
+# disrupDate = date(2008,3,1)
+# disrupTime = time(16,0)
+# disrupStartTime = datetime.combine(disrupDate,disrupTime)
+# # The above stores date and time for disruption beginning, as a datetime object
+
+# # Also present in config.csv
+# recovEndDate = date(2008,3,3)
+# recovEndTime = time(4,0)
+# recovByTime = datetime.combine(recovEndDate,recovEndTime)
+# # stores the end of the recovery window
+# # hard deadline for pax to get to their destinations
+
+# first X dataset
+currentDir = files_Xinstances[11]
+
+defaultDate = '01/03/08'
+
+# Disruption window and recovery time
+# This is present in config.csv
+disrupDate = date(2008,3,1)
+disrupTime = time(0,0)
+disrupStartTime = datetime.combine(disrupDate,disrupTime)
+# The above stores date and time for disruption beginning, as a datetime object
+
+# Also present in config.csv
+recovEndDate = date(2008,3,4)
+recovEndTime = time(6,0)
+recovByTime = datetime.combine(recovEndDate,recovEndTime)
+# stores the end of the recovery window
+# hard deadline for pax to get to their destinations
 
 
 #%%
@@ -55,7 +109,6 @@ from functionsPax_Sept2022 import *
 # generate random recovery file
 from generateRandomRecovery import *
 
-defaultDate = '07/01/06'
 
 GenerateRandomFlightRecoveryFile(currentDir,defaultDate)
 
@@ -100,20 +153,6 @@ data_LegTypes = FindFlightTypes(currentDir+'/dist.csv')
 # If the last line of dist.csv is a # (hashtag) then there might be a stray
 # node ('#',nan) in the output. We can simply ignore this
 # sanity check for above dictionary: size should be #airports*(#airports-1)
-
-# Disruption window and recovery time
-# This is present in config.csv
-disrupDate = date(2006,1,7)
-disrupTime = time(12,0)
-disrupStartTime = datetime.combine(disrupDate,disrupTime)
-# The above stores date and time for disruption beginning, as a datetime object
-
-# Also present in config.csv
-recovEndDate = date(2006,1,8)
-recovEndTime = time(4,0)
-recovByTime = datetime.combine(recovEndDate,recovEndTime)
-# stores the end of the recovery window
-# hard deadline for pax to get to their destinations
 
 # Flights.csv
 flightsDataFr = pd.read_csv(currentDir+'/flights.csv',
@@ -218,11 +257,12 @@ totalKDis = len(Kdis) # number of disrupted itineraries
 # Build the DAGs for every itinerary in disrupted set
 count = 0
 for k in Kdis:
+    
     if count%50 == 0: 
         print('computing Gk for itinerary %d of %d disrupted itineraries' % (count,totalKDis))
     count += 1
     
-    allAirportDAGs[k],allFlightDAGs[k],allPathsDAGs[k] = CreatingGraphGivenAnItinerary(data_itin,k,data_recovflights,data_airports,disrupStartTime,recovByTime,MaxLegNumIncrease)
+    allAirportDAGs[k],allFlightDAGs[k],_= CreatingGraphGivenAnItinerary(data_itin,k,data_recovflights,data_airports,disrupStartTime,recovByTime,MaxLegNumIncrease)
 
 
     if not any(allAirportDAGs[k]): 
@@ -233,22 +273,6 @@ for k in Kdis:
     
 # Sep 22 2022: 941 out of 1626 disrupted itinearies, time was 127 sec
 tim2 =  timer() - timInit
-
-#%%
-
-# # dict storing list of itineraries which have a given flight f in its arc set in cabin class m with some remaining capacity
-# dictFlightItinMap = {}
-
-# for flt in listAllFlights:
-#     for m in cabinTypes:
-        
-#         # row number in recovered flight data for flight f
-#         row = FindFirstKeyGivenValue(data_recovflights['Num'],flt)
-#         # capacity of the flight f
-#         remCap = data_recovflights['RemCabinCapacityGivenItin'][row][m]
-        
-        
-
 
 #%%
 """
@@ -262,10 +286,10 @@ mod = gp.Model("mip1")
 mod.setParam(GRB.Param.TimeLimit, timeLim)
 
 # Number of flow conservation constraints
-numflowConstraints = 0
-for k in Kdis:
-    # number of nodes in the DAG, subtract 1 to remove the source airport
-    numflowConstraints += len(allAirportDAGs[k].keys()) - 1
+# numflowConstraints = 0
+# for k in Kdis:
+#     # number of nodes in the DAG, subtract 1 to remove the source airport
+#     numflowConstraints += len(allAirportDAGs[k].keys()) - 1
     
         
 # First how many variables do we have?
@@ -288,8 +312,8 @@ cDelay = {}
 cCancel = {}
 
 # initialize the three terms in the objective function
-objDelayTerm = 0
-objDownGradingTerm = 0
+objDelayTerm = {}
+objDownGradingTerm = {}
 objCancelTerm = 0
 
 # dict storing list of itineraries which have a given flight f in its arc set in cabin class m with some remaining capacity
@@ -297,7 +321,8 @@ dictFlightItinMap = {}
 
 for k in Kdis: # for each itinerary 
 
-    yVar[k] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = GRB.INFINITY ,name="y"+"DummyFlt-Itin-%d" % (k))
+    # variable for dummy flight from source to sink of itin k
+    yVar[str(k)] = mod.addVar(vtype=GRB.INTEGER,lb = 0, ub = data_itin['PaxCount'][k],name="y"+"DummyFlt-Itin-%d" % (k))
     
     ArcSetOfItin = allFlightDAGs[k] # The DAG of our itinerary
     # Number of (unique) vertex pairs with arcs between them in the DAG, not counting multiple arcs between two nodes
@@ -312,14 +337,11 @@ for k in Kdis: # for each itinerary
     # define cancellation cost for itinerary k
     cCancel[k] = ObjCancCost(k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
     
-    objCancelTerm += LinExpr(cCancel[k]*yVar[k])
-    
     # dictionary of number of pax coming into node j, keys are each node, key values are number of pax sum_{i,m} y_{ijmk} for in node to j
     inFlowPaxNumDict = dict.fromkeys(list(allAirportDAGs[k].keys()),0)
     
     # dictionary of number of pax going out of node i, keys are each node, key values are number of pax sum_{j,m} y_{ijmk} for every out node from i
     outFlowPaxNumDict = dict.fromkeys(list(allAirportDAGs[k].keys()),0)
-    
     
 
     for arc in ArcSetOfItin.keys(): # for each arc i -> j
@@ -382,7 +404,7 @@ for k in Kdis: # for each itinerary
                         
                         cDown[f,m,k] = ObjDowngradingCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
                         
-                        objDownGradingTerm += LinExpr(cDown[f,m,k],yVar[f,m,k])
+                        objDownGradingTerm[f,m,k] = LinExpr(cDown[f,m,k],yVar[f,m,k])
                     
                     # delay costs
                     # only if flight has destination as sink of itinerary
@@ -391,7 +413,7 @@ for k in Kdis: # for each itinerary
                         # compute delay costs
                         cDelay[f,m,k] = ObjDelayCost(f,m,k,data_recovflights,data_itin,data_LegTypes,dictAllCosts)
                         
-                        objDelayTerm += LinExpr(cDelay[f,m,k],yVar[f,m,k])
+                        objDelayTerm[f,m,k] = LinExpr(cDelay[f,m,k],yVar[f,m,k])
                         
                     # Constraints
                     
@@ -416,8 +438,16 @@ for k in Kdis: # for each itinerary
         mod.addConstr(inFlowPaxNumDict[anyNode] == outFlowPaxNumDict[anyNode],"c1")
         
     # second constraint for source node
-    mod.addConstr(outFlowPaxNumDict[itinSource] + yVar[k] == data_itin['PaxCount'][k],"c2")
+    mod.addConstr(outFlowPaxNumDict[itinSource] + yVar[str(k)] == data_itin['PaxCount'][k],"c2")
  
+    
+objCancelTerm = quicksum(LinExpr(cCancel[k]*yVar[str(k)]) for k in Kdis)
+
+objDelayTermfull = quicksum([val for val in objDelayTerm.values()])
+
+objDownTermfull = quicksum(val for val in objDownGradingTerm.values())
+
+
 # write fourth constraint
 # for each (f,m) pair with remaining capacity
 for (f,m),itList in dictFlightItinMap.items():
@@ -442,9 +472,8 @@ for (f,m),itList in dictFlightItinMap.items():
 mod.update()  
                         
 # define the objective term of the MIP
-totalObjTerm = objDelayTerm + objDownGradingTerm + objCancelTerm
+totalObjTerm = objDelayTermfull + objDownTermfull + objCancelTerm
 
-                
 # Apr 25 2022: we prune to only use flights with non zero remaining capacity: numVar = 168006 for
 # 1659 itineraries, 608 flights, 35 airports, 3 cabin classes
 
@@ -462,6 +491,15 @@ mod.update()
 out = 0 # output, the runtime
 time_terminate = 0 # indicator for exceeding time threshold
 optVal = 0 # optimal value
+
+
+# for v in mod.getVars():
+#     print(v.varName)   
+
+modConstrs = mod.getConstrByName("c1")
+          
+dvars = mod.getVars()
+constrs = mod.getConstrs()
 
 #%%
 # Optimize model
@@ -489,6 +527,7 @@ ySize = mod.NumVars
 # mod.computeIIS() 
 # mod.write("MIP1.ilp")
 
+
 #%%
 
 with open(currentDir+"/AllDetailsAboutMIPSolution.txt", "a") as somf:
@@ -496,11 +535,67 @@ with open(currentDir+"/AllDetailsAboutMIPSolution.txt", "a") as somf:
     print('Total itineraries %d' % totalItin, file = somf)
     print('Disrupted itineraries %d' % len(Kdis), file = somf)
     print('Total #flights %d' % totalFlightNum, file = somf)
+    print('Total #airports %d' % len(data_airports), file = somf)
     print('Preprocessing time %f' % tim2, file = somf)
     print('MIP runtime %f' % out, file = somf)
     print('MIP objective %f' % optVal, file = somf)
     print('MIP number of zero variables %f out of %d' % (yZero,ySize), file = somf)
 
+
+#%%
+"""
+Sanity check Gurobi output
+"""
+
+with open(currentDir+"/AllDetailsAboutMIPSolution.txt", "a") as somf:
+    ycount = 0
+    nonzerokeys = []
+    yOutput = {}
+    for fmk_pairs in yVar.keys():
+        
+        if yOpt[ycount] > 0:
+            yOutput[fmk_pairs] = int(yOpt[ycount])
+            nonzerokeys += [fmk_pairs]
+           # print("Optimal value of y_%s is %f" % (fmk_pairs,yOpt[ycount]),file=somf)
+        
+        ycount += 1
+    
+## Reconstruct recovered solution from output
+
+    # make dict copy of itin
+    data_recovitin = data_itin.copy()
+    
+    # go through each nonzero yopt
+    for key,val in yOutput.items():
+        #y_k variable, dummy flight, we want to check partially/fully cancelled itineraries
+        if type(key) is not tuple:
+            
+            #orig num of pax in this itin
+            OGPaxCount = data_itin['PaxCount'][int(key)]
+            # new numberof pax in this itin
+            newPaxNum = val
+            
+            # OG itin file has more itin (same source, same sink)
+            itinFileRowNumber = data_recovitin['Num'][int(key)]
+            
+            print("itin %s: OG pax count %d, sol cancelled  %d" %(itinFileRowNumber,OGPaxCount,newPaxNum),file=somf)
+            
+            # partially cancelled
+            if OGPaxCount!= newPaxNum:
+                print('itin %s partially cancelled' % itinFileRowNumber,file=somf)
+                
+        else: # uncancelled itineries
+            
+            #orig num of pax in this itin
+            OGPaxCount = data_itin['PaxCount'][int(key[2])]
+            # new numberof pax in this itin
+            newPaxNum = val
+            
+            # OG itin file has more itin (same source, same sink)
+            itinFileRowNumber = data_recovitin['Num'][int(key[2])]
+            
+            print("itin %s: OG pax count %d, sol put %d pax on flight %s in cabin %s" %(itinFileRowNumber,OGPaxCount,newPaxNum,key[0],key[1]),file=somf)
+            
 #%%
 
 """
