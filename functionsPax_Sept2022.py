@@ -44,6 +44,17 @@ def CompareDate_IsFirstBigger(xDate,yDate):
     
     return(x2>y2) # Boolean if x>ys
 
+def UpdateRemFlightCap(labpath,paxTobeSent,remCap):
+    
+    for flight, cabclass in labpath:
+        
+        if remCap[flight][cabclass] >0:
+        
+            remCap[flight][cabclass] -= paxTobeSent 
+        
+    return remCap
+
+
 # NP has a builtin for zeros (np.zeros) why not use that?
 """
 This function makes a zero matrix.
@@ -101,6 +112,23 @@ def HighestCabinClass(cabinList):
 def CompareFlightType(first,second):
     dictMapping =  {'I':2,'C':1,'D':0} # ordering is now mapped to numbers
     return (dictMapping(first) > dictMapping(second)) # Is first > second
+
+# returns cancellation cost of an itinerary in data_itin (orig itin)
+def ReturnCancelCostOfanItin(k,itinData,allCostsDict):
+    
+    InorOutt = itinData['InOrOut'][k]
+    refcabinclass = itinData['ItinRefCabinClass'][k]
+    refflighttype = itinData['ItinRefFlightType'][k]
+    
+    firstTerm = allCostsDict['Cancel'][InorOutt][refflighttype][refcabinclass][0]
+    
+    secondTerm = itinData['UnitCost'][k]
+    
+    cancelCostPerPax = firstTerm + secondTerm
+    
+    return cancelCostPerPax
+    
+    
         
 # From a list of flight type, return the highest flight type I>C>D
 def HighestFlightType(FlightTypeList):
@@ -179,14 +207,15 @@ def CabinCapacity(somerecovFlightData,someFlightData,aircraftData,itinData):
             somerecovFlightData['IsFLightDisrupted'][fIndex] = True
     
     # triple nested dict
-    somerecovFlightData['RemCabinCapacityGivenItin'] = dict.fromkeys(somerecovFlightData['Num'].keys(),{})
+    somerecovFlightData['RemCabinCapacityGivenItin'] = dict.fromkeys(somerecovFlightData['Num'].values(),{})
     
     for i in somerecovFlightData['Num'].keys():
         # e.g. A380#1
         tail = somerecovFlightData['AircraftUsed'][i]
         cabCapacity = aircraftData[tail]
+        flt = somerecovFlightData['Num'][i]
         # remaining capacity is initialized to aircraft capacity
-        somerecovFlightData['RemCabinCapacityGivenItin'][i] = cabCapacity
+        somerecovFlightData['RemCabinCapacityGivenItin'][flt] = cabCapacity
         
     # set of all disrupted itineraries to be computed
     Kdis = []
@@ -220,10 +249,10 @@ def CabinCapacity(somerecovFlightData,someFlightData,aircraftData,itinData):
                     # e.g. 'E' class
                     legflightClass = itinData['LegCabinClass'][k][j2]
                     
-                    indexFlightData = FindFirstKeyGivenValue(somerecovFlightData['Num'],legflightID)
+                    #indexFlightData = FindFirstKeyGivenValue(somerecovFlightData['Num'],legflightID)
                     
                     # cap of this flight for this cabin class
-                    whatiscurrRemCap = somerecovFlightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass]
+                    whatiscurrRemCap = somerecovFlightData['RemCabinCapacityGivenItin'][legflightID][legflightClass]
                     
                     # update capacities for finite capacity flights
                     if  whatiscurrRemCap >0:
@@ -232,7 +261,7 @@ def CabinCapacity(somerecovFlightData,someFlightData,aircraftData,itinData):
                         reductionCap = whatiscurrRemCap - itin_pax
                         
                         # sanity check, make sure reduction doesn't go below zero
-                        somerecovFlightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass] = max(0,reductionCap)
+                        somerecovFlightData['RemCabinCapacityGivenItin'][legflightID][legflightClass] = max(0,reductionCap)
                                                     
                 # # number of passengers assigned to this flight by the itinerary
                 # allPaxAssigned = somerecovFlightData['RemCabinCapacityGivenItin'][indexFlightData][legflightClass] - itin_pax
